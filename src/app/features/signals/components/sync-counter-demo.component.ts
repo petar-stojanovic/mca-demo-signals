@@ -8,8 +8,8 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
       <div class="card">
         <h2 class="card-title text-2xl mb-1">See It Yourself</h2>
         <p class="text-sm opacity-60 mb-6">
-          This app runs <strong>Zoneless</strong>. Increment both counters and watch: only the signal
-          side updates — the zone counter stays frozen with nothing to trigger a rerender.
+          This app runs <strong>Zoneless</strong>. Increment both counters and watch: only the
+          signal side updates — the zone counter stays frozen with nothing to trigger a rerender.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

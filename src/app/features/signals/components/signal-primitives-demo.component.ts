@@ -21,11 +21,12 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
               <h3 class="card-title text-xl">
                 <code class="text-primary">signal()</code>
               </h3>
-              <p class="text-sm opacity-70">
-                A reactive value container. Read it by calling it like a function. Write it with
-                <code>.set()</code> or <code>.update()</code>. Angular tracks every template binding
-                that reads it.
-              </p>
+              <ul class="text-sm opacity-70 space-y-1">
+                <li>Holds a value</li>
+                <li>Read it: <code>count()</code></li>
+                <li>Change it: <code>.set()</code> or <code>.update()</code></li>
+                <li>Angular updates the UI automatically</li>
+              </ul>
               <div class="stats shadow w-full">
                 <div class="stat">
                   <div class="stat-title">count</div>
@@ -47,19 +48,19 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
               <h3 class="card-title text-xl">
                 <code class="text-secondary">computed()</code>
               </h3>
-              <p class="text-sm opacity-70">
-                A read-only derived signal. Declared once, always current. Recalculates only when
-                its dependencies change — never over-computes, never goes stale.
-              </p>
+              <ul class="text-sm opacity-70 space-y-1">
+                <li>Derives a value from other signals</li>
+                <li>Read-only — you can't set it directly</li>
+                <li>Recalculates only when dependencies change</li>
+                <li>Never stale, never over-computes</li>
+              </ul>
               <div class="stats shadow w-full">
                 <div class="stat">
                   <div class="stat-title">doubled = count × 2</div>
                   <div class="stat-value text-secondary">{{ doubled() }}</div>
                 </div>
               </div>
-              <p class="text-xs opacity-50 font-mono text-center">
-                computed(() => count() * 2)
-              </p>
+              <p class="text-xs opacity-50 font-mono text-center">computed(() => count() * 2)</p>
             </div>
           </div>
 
@@ -69,11 +70,17 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
               <h3 class="card-title text-xl">
                 <code class="text-accent">effect()</code>
               </h3>
-              <p class="text-sm opacity-70">
-                Runs a side effect whenever its signal dependencies change. Right for logging,
-                syncing to <code>localStorage</code>, or triggering external systems — not for
-                updating other signals.
-              </p>
+              <ul class="text-sm opacity-70 space-y-1">
+                <li>Runs code when a signal changes</li>
+                <li>
+                  Good for:
+                  <span class="badge badge-ghost">logging </span>
+                  <span class="badge badge-ghost">localStorage </span>
+                  <span class="badge badge-ghost">analytics </span>
+                </li>
+                <li>Not for updating other signals</li>
+                <li>Cleans up automatically on destroy</li>
+              </ul>
               <div class="bg-base-200 rounded-lg p-3 h-28 overflow-y-auto space-y-1">
                 @if (effectLog().length === 0) {
                   <p class="text-xs opacity-40 italic">Waiting for changes…</p>
