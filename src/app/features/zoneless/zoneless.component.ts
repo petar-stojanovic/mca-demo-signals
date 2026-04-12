@@ -1,4 +1,10 @@
-import { Component, ChangeDetectorRef, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,11 +14,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './zoneless.component.html',
 })
 export class ZonelessDemoComponent {
+  private cdr = inject(ChangeDetectorRef);
+
+
   traditionalValue = 0;
-  signalValue = signal(0);
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
   updateTraditional() {
     setTimeout(() => {
       this.traditionalValue++;
@@ -21,6 +26,7 @@ export class ZonelessDemoComponent {
     }, 1000);
   }
 
+  signalValue = signal(0);
   updateSignal() {
     setTimeout(() => {
       this.signalValue.update((v) => v + 1);

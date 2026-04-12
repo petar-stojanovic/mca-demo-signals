@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  signal,
-  untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
 @Component({
   selector: 'app-signals-demo',
@@ -14,35 +7,24 @@ import {
   templateUrl: './signals.component.html',
 })
 export class SignalsDemoComponent {
-  // Legacy / Zone approach
   counter = 0;
-  zoneEvalCount = 0;
   get doubleCounter() {
     console.log('Zone Check: Calculating doubleCounter');
-    this.zoneEvalCount++;
     return this.counter * 2;
   }
 
-  // Modern / Signal approach
-  signalCount = signal(0);
-  signalComputeCount = signal(0);
-  signalDouble = computed(() => {
-    console.log('Signal Check: Calculating double');
-    return this.signalCount() * 2;
-  });
+  signalCounter = signal(0);
 
-  constructor() {
-    effect(() => {
-      this.signalDouble();
-      untracked(() => this.signalComputeCount.update((c) => c + 1));
-    });
-  }
+  signalDoubleCounter = computed(() => {
+    console.log('Signal Check: Calculating signalDoubleCounter');
+    return this.signalCounter() * 2;
+  });
 
   incrementZone() {
     this.counter++;
   }
 
   incrementSignal() {
-    this.signalCount.update((c) => c + 1);
+    this.signalCounter.update((c) => c + 1);
   }
 }
