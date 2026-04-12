@@ -11,11 +11,13 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="min-h-screen flex items-center justify-center">
-      <div class="card w-full max-w-2xl">
+      <div class="card w-full">
         <h2 class="card-title text-2xl mb-1">Async Updates</h2>
         <p class="text-sm opacity-60 mb-6">
-          Both buttons wait <strong>1 second</strong> before updating. No Zone.js means plain
-          properties are invisible to Angular — only signals can notify it.
+          Both buttons wait <strong>1 second</strong> before updating. Without Zone.js,
+          <code>setTimeout</code> no longer triggers change detection — so the plain property
+          updates in memory but Angular never re-renders it. Signals notify Angular directly,
+          so they always work.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Plain property -->
@@ -30,7 +32,7 @@ import {
             <button class="btn btn-error mt-4 text-white" (click)="updateTraditional()">
               Update (1s delay)
             </button>
-            <p class="mt-2 text-xs opacity-60">UI freezes — no Zone.js, no signal.</p>
+            <p class="mt-2 text-xs opacity-60">Updates in memory, but Angular is never notified to re-render.</p>
           </div>
           <!-- Signal -->
           <div class="p-4 border-2 border-success rounded-lg bg-base-200">

@@ -106,7 +106,10 @@ export class SignalPrimitivesDemoComponent {
   readonly effectLog = signal<string[]>([]);
 
   private readonly effectExample = effect(() => {
+    // reads count — tracked
     const val = this.count();
+
+    // writes effectLog — not tracked
     this.effectLog.update((log) => [...log, `count changed → ${val}`]);
   });
 
