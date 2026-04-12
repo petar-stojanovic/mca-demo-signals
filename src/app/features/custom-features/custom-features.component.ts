@@ -1,4 +1,3 @@
-// src/app/features/custom-features/custom-features.component.ts
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DemoApiStore } from './demo-api.store';
 
