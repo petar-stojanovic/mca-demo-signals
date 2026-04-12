@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
 export class ZonelessDemoComponent {
   private cdr = inject(ChangeDetectorRef);
 
-
   traditionalValue = 0;
   updateTraditional() {
     setTimeout(() => {

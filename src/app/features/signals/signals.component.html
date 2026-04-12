@@ -1,17 +1,15 @@
 <div class="space-y-12 py-4">
-
   <!-- Hero -->
   <section class="text-center space-y-4">
     <h1 class="text-4xl font-bold tracking-tight">How Angular Detects Changes</h1>
     <p class="text-lg opacity-70 max-w-2xl mx-auto">
-      Angular has evolved from checking every component on every event to surgically updating only
-      what changed. Here's the journey — and why it ends with Signals.
+      Zone.js told Angular <em>when</em> to check for changes. Signals tell Angular
+      <em>what</em> changed — no more checking the whole tree.
     </p>
   </section>
 
   <!-- Evolution: 3 GIFs -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
     <!-- Step 1: Default -->
     <div class="card bg-base-100 border border-gray-500/30">
       <div class="card-body gap-4">
@@ -24,11 +22,11 @@
         <img
           src="default-change-detection.gif"
           alt="Default change detection: every component in the tree is checked on each event"
-          class="rounded-lg w-full border border-base-300"
+          class="rounded-lg w-full"
         />
         <p class="text-sm opacity-70">
-          Any event (click, timeout, HTTP) triggers a <strong>full tree traversal</strong>.
-          Every component is checked top to bottom — even those unrelated to what changed.
+          Any event (click, timeout, HTTP) triggers a <strong>full tree traversal</strong>. Every
+          component is checked top to bottom — even those unrelated to what changed.
         </p>
         <div class="badge badge-error badge-outline self-start">Checks all N components</div>
       </div>
@@ -46,11 +44,11 @@
         <img
           src="on-push-change-detection.gif"
           alt="OnPush: only the dirty path from root to the changed component is checked"
-          class="rounded-lg w-full border border-base-300"
+          class="rounded-lg w-full"
         />
         <p class="text-sm opacity-70">
-          Angular skips entire subtrees unless a component is marked dirty. Still traverses the
-          path from root and re-evaluates <strong>all expressions</strong> in the dirty component.
+          Angular skips entire subtrees unless a component is marked dirty. Still traverses the path
+          from root and re-evaluates <strong>all expressions</strong> in the dirty component.
         </p>
         <div class="badge badge-warning badge-outline self-start">Checks the dirty path</div>
       </div>
@@ -68,73 +66,20 @@
         <img
           src="signals-change-detection.gif"
           alt="Signals: only the exact DOM binding that depends on the changed signal updates"
-          class="rounded-lg w-full border border-base-300"
+          class="rounded w-full border border-[#fceab6]"
         />
         <p class="text-sm opacity-70">
           Angular tracks exactly which template binding reads which signal. When a signal changes,
-          <strong>only those DOM nodes update</strong> — no traversal, no dirty marking, no guessing.
+          <strong>only those DOM nodes update</strong> — no traversal, no dirty marking, no
+          guessing.
         </p>
         <div class="badge badge-primary badge-outline self-start">Updates 1 binding</div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Zoneless → Signals narrative -->
-  <section class="min-h-screen flex items-center justify-center ">
-    <div class="card-body space-y-6">
-      <h2 class="card-title text-2xl">From Zoneless to Signals</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="space-y-3">
-          <h3 class="font-semibold flex items-center gap-2">
-            <span class="badge badge-ghost">The problem with Zone.js</span>
-          </h3>
-          <p class="text-sm opacity-70 leading-relaxed">
-            Zone.js monkey-patches browser APIs — <code>setTimeout</code>, <code>Promise</code>,
-            <code>fetch</code>, event listeners — so Angular is notified whenever async work
-            completes. Useful, but invisible: it runs constantly, triggers full change detection on
-            every event, and adds ~100 kB to your bundle.
-          </p>
-          <p class="text-sm opacity-70 leading-relaxed">
-            <strong>Zoneless</strong> removes Zone.js entirely. Angular no longer has an automatic
-            trigger — nothing rerenders unless you explicitly tell it something changed.
-          </p>
-        </div>
-
-        <div class="space-y-3">
-          <h3 class="font-semibold flex items-center gap-2">
-            <span class="badge badge-primary badge-outline">Signals fill the gap</span>
-          </h3>
-          <p class="text-sm opacity-70 leading-relaxed">
-            Without Zone.js, you need an explicit primitive to signal state changes. That's exactly
-            what <strong>Signals</strong> are: Angular subscribes to them at the template-binding
-            level. When a signal's value changes, Angular knows which specific bindings depend on it
-            and schedules only those for update.
-          </p>
-          <p class="text-sm opacity-70 leading-relaxed">
-            The result: <strong>predictable, fast, and debuggable</strong> reactivity. No more "why
-            did this rerender?" — the dependency graph is explicit.
-          </p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-3 gap-4 pt-2 items-center">
-        <div class="p-4 bg-base-200 rounded-lg text-center">
-          <div class="text-xl font-bold text-error mb-1">Zone.js</div>
-          <div class="text-xs opacity-60">Implicit · always on · checks everything</div>
-        </div>
-        <div class="text-center text-2xl opacity-30 font-bold">→</div>
-        <div class="p-4 bg-primary/10 border border-primary/30 rounded-lg text-center">
-          <div class="text-xl font-bold text-primary mb-1">Signals</div>
-          <div class="text-xs opacity-60">Explicit · on-demand · updates only what changed</div>
-        </div>
       </div>
     </div>
   </section>
 
   <!-- Live demo -->
-  <section class="min-h-screen flex items-center justify-center ">
+  <section class="min-h-screen flex items-center justify-center">
     <div class="card">
       <h2 class="card-title text-2xl mb-1">See It Yourself</h2>
       <p class="text-sm opacity-60 mb-6">
@@ -143,13 +88,9 @@
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
         <!-- Zone side -->
         <div class="p-4 border rounded-lg bg-base-200">
           <h3 class="text-xl font-bold mb-2">Zone Counter</h3>
-          <p class="mb-4 text-sm opacity-70">
-            Plain class property. In a Zoneless app, Angular never learns it changed.
-          </p>
           <div class="stats shadow w-full">
             <div class="stat">
               <div class="stat-title">Counter</div>
@@ -164,9 +105,6 @@
         <!-- Signal side -->
         <div class="p-4 border-2 border-primary rounded-lg bg-base-200">
           <h3 class="text-xl font-bold mb-2 text-primary">Signal Counter</h3>
-          <p class="mb-4 text-sm opacity-70">
-            Signal — Angular tracks this binding and updates only it when the value changes.
-          </p>
           <div class="stats shadow w-full">
             <div class="stat">
               <div class="stat-title">Signal Count</div>
@@ -174,12 +112,30 @@
               <div class="stat-desc text-lg">Computed Double: {{ signalDoubleCounter() }}</div>
             </div>
           </div>
+          <div role="note" class="alert alert-info mt-4 text-sm">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>
+              Change detection re-runs every expression in the component — not just the ones related
+              to what changed. With signals, Angular knows exactly which bindings to skip.
+            </span>
+          </div>
           <button class="btn btn-accent mt-4" (click)="incrementSignal()">Increment</button>
         </div>
-
       </div>
     </div>
-
   </section>
-
 </div>
