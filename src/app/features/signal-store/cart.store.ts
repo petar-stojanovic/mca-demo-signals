@@ -1,8 +1,15 @@
 import { computed } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { withDevtools } from '@angular-architects/ngrx-toolkit';
 
-export type ShopItem = {
+export type CartItem = {
   id: number;
   name: string;
   price: number;
@@ -10,7 +17,7 @@ export type ShopItem = {
 };
 
 export type AppState = {
-  cartItems: ShopItem[];
+  cartItems: CartItem[];
 };
 
 export const initialState: AppState = {
@@ -45,4 +52,8 @@ export const CartStore = signalStore(
       });
     },
   })),
+  withHooks({
+    onInit: (store) => console.log('Store initialized', store),
+    onDestroy: (store) => console.log('Store destroyed', store),
+  }),
 );

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { injectDispatch } from '@ngrx/signals/events';
-import { ShopItem, CartStore } from './cart.store';
+import { CartItem, CartStore } from './cart.store';
 import { cartEvents } from './cart.events';
 
 @Component({
@@ -246,7 +246,7 @@ export class SignalStoreComponent {
   readonly store = inject(CartStore);
   readonly dispatch = injectDispatch(cartEvents);
 
-  toggleItem(item: ShopItem) {
+  toggleItem(item: CartItem) {
     this.store.toggleInCart(item.id);
     if (item.inCart) {
       this.dispatch.itemRemoved({ name: item.name });
@@ -256,13 +256,13 @@ export class SignalStoreComponent {
   }
 
   readonly classicNgrxCode = `// actions.ts
-export const loadItems = createAction('[Shop] Load');
+export const loadItems = createAction('[Cart] Load');
 export const toggleCart = createAction(
-  '[Shop] Toggle', props<{ itemId: number }>()
+  '[Cart] Toggle', props<{ itemId: number }>()
 );
 
 // reducer.ts
-export const shopReducer = createReducer(
+export const cartReducer = createReducer(
   initialState,
   on(loadItems, (state) => ({ ...state, items })),
   on(toggleCart, (state, { itemId }) => ({
@@ -277,7 +277,7 @@ export const shopReducer = createReducer(
 
 // selectors.ts
 export const selectItems = createSelector(
-  selectShopState, (state) => state.items
+  selectcartState, (state) => state.items
 );
 export const selectCartItems = createSelector(
   selectItems, (items) => items.filter(i => i.inCart)
@@ -287,8 +287,8 @@ export const selectCartTotal = createSelector(
     items.reduce((sum, i) => sum + i.price, 0)
 );`;
 
-  readonly signalStoreComparisonCode = `// shop.store.ts — that's it!
-export const ShopStore = signalStore(
+  readonly signalStoreComparisonCode = `// cart.store.ts — that's it!
+export const CartStore = signalStore(
   { providedIn: 'root' },
   withState({ cartItems: initialItems }),
   withComputed(({ cartItems }) => ({
@@ -344,7 +344,7 @@ export const ShopStore = signalStore(
   },
 }))`;
 
-  readonly eventGroupCode = `// shop.events.ts
+  readonly eventGroupCode = `// cart.events.ts
 import { type } from '@ngrx/signals';
 import { eventGroup } from '@ngrx/signals/events';
 
@@ -359,7 +359,7 @@ export const cartEvents = eventGroup({
 
   readonly injectDispatchCode = `// component
 import { injectDispatch } from '@ngrx/signals/events';
-import { cartEvents } from './shop.events';
+import { cartEvents } from './cart.events';
 
 class MyComponent {
   dispatch = injectDispatch(cartEvents);
@@ -371,7 +371,7 @@ class MyComponent {
 
   readonly withReducerCode = `// notification.store.ts — separate store!
 import { on, withReducer } from '@ngrx/signals/events';
-import { cartEvents } from './shop.events';
+import { cartEvents } from './cart.events';
 
 export const NotificationStore = signalStore(
   { providedIn: 'root' },
