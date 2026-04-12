@@ -4,7 +4,7 @@
 
 **Goal:** Add a SignalStore demo page with a progressive shop example showing `withState`, `withComputed`, and `withMethods` — each section pairing a code snippet with live UI.
 
-**Architecture:** A single NgRx SignalStore (`ShopStore`) holds shop item state. One component renders three sections that progressively explain the store features. The store is `providedIn: 'root'` and the component is lazy-loaded at `/signal-store`.
+**Architecture:** A single NgRx SignalStore (`CartStore`) holds shop item state. One component renders three sections that progressively explain the store features. The store is `providedIn: 'root'` and the component is lazy-loaded at `/signal-store`.
 
 **Tech Stack:** Angular 21, @ngrx/signals, DaisyUI, Tailwind CSS
 
@@ -17,7 +17,7 @@
 | Action  | Path                                                      | Responsibility                            |
 | ------- | --------------------------------------------------------- | ----------------------------------------- |
 | Install | `@ngrx/signals` (npm)                                     | NgRx SignalStore library                  |
-| Create  | `src/app/features/signal-store/shop.store.ts`             | SignalStore with state, computed, methods |
+| Create  | `src/app/features/signal-store/cart.store.ts`             | SignalStore with state, computed, methods |
 | Create  | `src/app/features/signal-store/signal-store.component.ts` | Progressive demo component                |
 | Modify  | `src/app/app.routes.ts`                                   | Add `/signal-store` lazy route            |
 | Modify  | `src/app/layout/navbar.component.ts`                      | Add "SignalStore" nav link                |
@@ -46,11 +46,11 @@ Expected: Shows `@ngrx/signals@21.x.x` (or latest compatible version)
 
 ---
 
-### Task 2: Create the ShopStore
+### Task 2: Create the CartStore
 
 **Files:**
 
-- Create: `src/app/features/signal-store/shop.store.ts`
+- Create: `src/app/features/signal-store/cart.store.ts`
 
 - [ ] **Step 1: Create the store file**
 
@@ -73,7 +73,7 @@ const initialItems: ShopItem[] = [
   { id: 5, name: 'Desk Lamp', price: 29.99, inCart: false },
 ];
 
-export const ShopStore = signalStore(
+export const CartStore = signalStore(
   { providedIn: 'root' },
   withState({ items: initialItems }),
   withComputed(({ items }) => ({
@@ -111,7 +111,7 @@ The component has three progressive sections. Each section has a two-column layo
 ```typescript
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { ShopStore } from './shop.store';
+import { CartStore } from './shop.store';
 
 @Component({
   selector: 'app-signal-store-demo',
@@ -246,9 +246,9 @@ import { ShopStore } from './shop.store';
   `,
 })
 export class SignalStoreComponent {
-  readonly store = inject(ShopStore);
+  readonly store = inject(CartStore);
 
-  readonly withStateCode = `const ShopStore = signalStore(
+  readonly withStateCode = `const CartStore = signalStore(
   { providedIn: 'root' },
   withState({
     items: [

@@ -1,6 +1,6 @@
 import { signalStore, withState } from '@ngrx/signals';
 import { on, withReducer } from '@ngrx/signals/events';
-import { cartEvents } from './shop.events';
+import { cartEvents } from './cart.events';
 
 type Notification = {
   id: number;

@@ -20,8 +20,8 @@ import { DemoApiStore } from './demo-api.store';
             <code class="text-primary">withLogger</code>
           </h2>
           <p class="opacity-70">
-            Logs every state change to the console. One line to add to any store.
-            Open DevTools console and interact with the demo below to see it in action.
+            Logs every state change to the console. One line to add to any store. Open DevTools
+            console and interact with the demo below to see it in action.
           </p>
         </div>
       </section>

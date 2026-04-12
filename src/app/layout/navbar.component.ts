@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { injectDispatch } from '@ngrx/signals/events';
 import { NotificationStore } from '../features/signal-store/notification.store';
+import { cartEvents } from '../features/signal-store/cart.events';
 
 @Component({
   selector: 'app-navbar',
@@ -76,15 +78,23 @@ import { NotificationStore } from '../features/signal-store/notification.store';
             class="dropdown-content mt-3 z-[1] card card-compact w-80 shadow-lg bg-base-100"
           >
             <div class="card-body">
-              <h3 class="card-title text-sm">Events Log</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="card-title text-sm">Events Log</h3>
+                @if (notificationStore.notifications().length > 0) {
+                  <button
+                    class="btn btn-ghost btn-xs"
+                    (click)="clearNotifications()"
+                    aria-label="Clear all notifications"
+                  >
+                    Clear all
+                  </button>
+                }
+              </div>
               @if (notificationStore.notifications().length === 0) {
                 <p class="text-sm opacity-50">No events yet.</p>
               } @else {
                 <ul class="space-y-1 max-h-64 overflow-y-auto">
-                  @for (
-                    notification of notificationStore.notifications();
-                    track notification.id
-                  ) {
+                  @for (notification of notificationStore.notifications(); track notification.id) {
                     <li class="text-sm p-2 bg-base-200 rounded flex justify-between">
                       <span>{{ notification.message }}</span>
                       <span class="opacity-50 text-xs">{{ notification.timestamp }}</span>
@@ -101,4 +111,9 @@ import { NotificationStore } from '../features/signal-store/notification.store';
 })
 export class NavbarComponent {
   readonly notificationStore = inject(NotificationStore);
+  private readonly dispatch = injectDispatch(cartEvents);
+
+  clearNotifications() {
+    this.dispatch.cartCleared();
+  }
 }

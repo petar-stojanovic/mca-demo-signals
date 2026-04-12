@@ -10,11 +10,11 @@ export type ShopItem = {
 };
 
 export type AppState = {
-  items: ShopItem[];
+  cartItems: ShopItem[];
 };
 
 export const initialState: AppState = {
-  items: [
+  cartItems: [
     { id: 1, name: 'Wireless Headphones', price: 59.99, inCart: false },
     { id: 2, name: 'Mechanical Keyboard', price: 89.99, inCart: false },
     { id: 3, name: 'USB-C Hub', price: 34.99, inCart: false },
@@ -23,15 +23,15 @@ export const initialState: AppState = {
   ],
 };
 
-export const ShopStore = signalStore(
+export const CartStore = signalStore(
   { providedIn: 'root' },
-  withDevtools('[SHOP-STORE]'),
-  // withLogger('[SHOP-STORE]'),
+  withDevtools('[CART-STORE]'),
+  // withLogger('[CART-STORE]'),
   withState(initialState),
-  withComputed(({ items }) => ({
-    cartItems: computed(() => items().filter((item) => item.inCart)),
+  withComputed(({ cartItems }) => ({
+    cartItems: computed(() => cartItems().filter((item) => item.inCart)),
     cartTotal: computed(() =>
-      items()
+      cartItems()
         .filter((item) => item.inCart)
         .reduce((sum, item) => sum + item.price, 0),
     ),
@@ -39,8 +39,8 @@ export const ShopStore = signalStore(
   withMethods((store) => ({
     toggleInCart(itemId: number) {
       patchState(store, {
-        items: store
-          .items()
+        cartItems: store
+          .cartItems()
           .map((item) => (item.id === itemId ? { ...item, inCart: !item.inCart } : item)),
       });
     },

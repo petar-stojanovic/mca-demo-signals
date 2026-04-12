@@ -21,7 +21,7 @@ Hardcoded initial items (no API calls). ~4-5 products with varied prices.
 
 ## Files to Create
 
-### `src/app/features/signal-store/shop.store.ts`
+### `src/app/features/signal-store/cart.store.ts`
 
 An NgRx SignalStore using `signalStore()` with `providedIn: 'root'`:
 
@@ -34,7 +34,7 @@ An NgRx SignalStore using `signalStore()` with `providedIn: 'root'`:
 
 ### `src/app/features/signal-store/signal-store.component.ts`
 
-Standalone component with `ChangeDetectionStrategy.OnPush`. Injects `ShopStore`. Inline template.
+Standalone component with `ChangeDetectionStrategy.OnPush`. Injects `CartStore`. Inline template.
 
 Three progressive sections in a single-column layout:
 

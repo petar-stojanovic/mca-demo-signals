@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { injectDispatch } from '@ngrx/signals/events';
-import { ShopItem, ShopStore } from './shop.store';
-import { cartEvents } from './shop.events';
+import { ShopItem, CartStore } from './cart.store';
+import { cartEvents } from './cart.events';
 
 @Component({
   selector: 'app-signal-store-demo',
@@ -34,10 +34,7 @@ import { cartEvents } from './shop.events';
             </div>
             <div class="p-4 bg-base-200 rounded-lg">
               <h3 class="font-bold mb-1">Signal-Native</h3>
-              <p class="text-sm opacity-70">
-                Built on Angular Signals — no RxJS required for state. Fine-grained reactivity out
-                of the box.
-              </p>
+              <p class="text-sm opacity-70">Built on Angular Signals</p>
             </div>
             <div class="p-4 bg-base-200 rounded-lg">
               <h3 class="font-bold mb-1">Functional & Composable</h3>
@@ -85,7 +82,7 @@ import { cartEvents } from './shop.events';
             <div>
               <h3 class="font-semibold mb-2">Live: Product List</h3>
               <ul class="space-y-2">
-                @for (item of store.items(); track item.id) {
+                @for (item of store.cartItems(); track item.id) {
                   <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
                     <span>{{ item.name }}</span>
                     <span class="badge badge-outline">{{ item.price | currency }}</span>
@@ -163,7 +160,7 @@ import { cartEvents } from './shop.events';
             <div>
               <h3 class="font-semibold mb-2">Live: Toggle Cart</h3>
               <ul class="space-y-2">
-                @for (item of store.items(); track item.id) {
+                @for (item of store.cartItems(); track item.id) {
                   <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
                     <div>
                       <span>{{ item.name }}</span>
@@ -246,7 +243,7 @@ import { cartEvents } from './shop.events';
   `,
 })
 export class SignalStoreComponent {
-  readonly store = inject(ShopStore);
+  readonly store = inject(CartStore);
   readonly dispatch = injectDispatch(cartEvents);
 
   toggleItem(item: ShopItem) {
@@ -257,7 +254,6 @@ export class SignalStoreComponent {
       this.dispatch.itemAdded({ name: item.name, price: item.price });
     }
   }
-
 
   readonly classicNgrxCode = `// actions.ts
 export const loadItems = createAction('[Shop] Load');
@@ -294,18 +290,18 @@ export const selectCartTotal = createSelector(
   readonly signalStoreComparisonCode = `// shop.store.ts — that's it!
 export const ShopStore = signalStore(
   { providedIn: 'root' },
-  withState({ items: initialItems }),
-  withComputed(({ items }) => ({
+  withState({ cartItems: initialItems }),
+  withComputed(({ cartItems }) => ({
     cartItems: computed(() =>
-      items().filter(i => i.inCart)),
+      cartItems().filter(i => i.inCart)),
     cartTotal: computed(() =>
-      items().filter(i => i.inCart)
+      cartItems().filter(i => i.inCart)
         .reduce((sum, i) => sum + i.price, 0)),
   })),
   withMethods((store) => ({
     toggleInCart(itemId: number) {
       patchState(store, {
-        items: store.items().map(item =>
+        items: store.cartItems().map(item =>
           item.id === itemId
             ? { ...item, inCart: !item.inCart }
             : item),
@@ -314,7 +310,7 @@ export const ShopStore = signalStore(
   })),
 );`;
 
-  readonly withStateCode = `const ShopStore = signalStore(
+  readonly withStateCode = `const CartStore = signalStore(
   { providedIn: 'root' },
   withState({
     items: [
@@ -327,10 +323,10 @@ export const ShopStore = signalStore(
 
   readonly withComputedCode = `withComputed(({ items }) => ({
   cartItems: computed(() =>
-    items().filter(item => item.inCart)
+    cartItems().filter(item => item.inCart)
   ),
   cartTotal: computed(() =>
-    items()
+    cartItems()
       .filter(item => item.inCart)
       .reduce((sum, item) => sum + item.price, 0)
   ),
@@ -339,7 +335,7 @@ export const ShopStore = signalStore(
   readonly withMethodsCode = `withMethods((store) => ({
   toggleInCart(itemId: number) {
     patchState(store, {
-      items: store.items().map(item =>
+      items: store.cartItems().map(item =>
         item.id === itemId
           ? { ...item, inCart: !item.inCart }
           : item
