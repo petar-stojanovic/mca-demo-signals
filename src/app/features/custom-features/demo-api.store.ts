@@ -4,7 +4,7 @@ import { signalStore, withMethods, withState } from '@ngrx/signals';
 import { patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { delay, pipe, switchMap, tap } from 'rxjs';
-import { withLogger } from '../signal-store/signal-store-features';
+import { withLogger } from '../signal-store/store/signal-store-features';
 import { requestStateReset, withRequestStateAndErrorHandling } from './request-state.feature';
 import { withDevtools } from '@angular-architects/ngrx-toolkit';
 
@@ -38,7 +38,7 @@ export const DemoApiStore = signalStore(
           store.setLoading();
           patchState(store, { users: [] });
         }),
-        delay(5000),
+        delay(1000),
         switchMap(() => {
           return http.get<DemoUser[]>(`${API_URL}/users`).pipe(
             store.handleRequest({

@@ -1,8 +1,17 @@
+// src/app/layout/navbar.component.ts
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { injectDispatch } from '@ngrx/signals/events';
-import { NotificationStore } from '../features/signal-store/notification.store';
-import { cartEvents } from '../features/signal-store/cart.events';
+import { NotificationStore } from '../features/signal-store/store/notification.store';
+import { cartEvents } from '../features/signal-store/store/cart.events';
+
+const NAV_ITEMS = [
+  { label: 'Signals & Zoneless', path: '/signals' },
+  { label: 'SignalStore', path: '/signal-store' },
+  { label: 'Events', path: '/events' },
+  { label: 'Testing', path: '/testing' },
+  { label: 'Custom Features', path: '/custom-features' },
+] as const;
 
 @Component({
   selector: 'app-navbar',
@@ -32,20 +41,22 @@ import { cartEvents } from '../features/signal-store/cart.events';
             tabindex="0"
             class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <li><a routerLink="/zoneless" routerLinkActive="active">Zoneless</a></li>
-            <li><a routerLink="/signals" routerLinkActive="active">Signals vs Zone</a></li>
-            <li><a routerLink="/signal-store" routerLinkActive="active">SignalStore</a></li>
-            <li><a routerLink="/custom-features" routerLinkActive="active">Custom Features</a></li>
+            @for (item of navItems; track item.path) {
+              <li>
+                <a [routerLink]="item.path" routerLinkActive="active">{{ item.label }}</a>
+              </li>
+            }
           </ul>
         </div>
-        <a routerLink="/" class="btn btn-ghost text-xl">Angular 21</a>
+        <a routerLink="/" class="btn btn-ghost text-xl">Angular Signals</a>
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
-          <li><a routerLink="/zoneless" routerLinkActive="active">Zoneless</a></li>
-          <li><a routerLink="/signals" routerLinkActive="active">Signals vs Zone</a></li>
-          <li><a routerLink="/signal-store" routerLinkActive="active">SignalStore</a></li>
-          <li><a routerLink="/custom-features" routerLinkActive="active">Custom Features</a></li>
+          @for (item of navItems; track item.path) {
+            <li>
+              <a [routerLink]="item.path" routerLinkActive="active">{{ item.label }}</a>
+            </li>
+          }
         </ul>
       </div>
       <div class="navbar-end">
@@ -110,6 +121,7 @@ import { cartEvents } from '../features/signal-store/cart.events';
   `,
 })
 export class NavbarComponent {
+  readonly navItems = NAV_ITEMS;
   readonly notificationStore = inject(NotificationStore);
   private readonly dispatch = injectDispatch(cartEvents);
 
