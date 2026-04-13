@@ -13,11 +13,41 @@
     <div class="card-body space-y-6">
       <h2 class="card-title text-2xl">How it works</h2>
 
-      <img src="app-architecture-with-events-plugin.png" alt="" class="rounded-lg w-full" />
+      <img
+        src="app-architecture-with-events-plugin.png"
+        alt=""
+        class="rounded-lg w-full max-w-4xl mx-auto"
+      />
 
-      <p class="text-sm opacity-60 text-center">
-        No direct connection between the stores. They only share the event definition.
-      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-primary mb-1">Event</p>
+          <p class="text-xs opacity-70">
+            Describes an occurrence within the system. Events are dispatched to trigger state
+            changes and/or side effects.
+          </p>
+        </div>
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-warning mb-1">Dispatcher</p>
+          <p class="text-xs opacity-70">
+            An event bus that forwards events to their corresponding handlers in the stores.
+          </p>
+        </div>
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-secondary mb-1">Store</p>
+          <p class="text-xs opacity-70">
+            Contains event handlers that manage state transitions and handle side effects,
+            maintaining a clean and predictable application flow.
+          </p>
+        </div>
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-accent mb-1">View</p>
+          <p class="text-xs opacity-70">
+            Reflects state changes and dispatches new events, enabling continuous interaction
+            between the user interface and the underlying system.
+          </p>
+        </div>
+      </div>
 
       <!-- Concept pills with descriptions and code toggles -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
