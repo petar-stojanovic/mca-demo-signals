@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { injectDispatch } from '@ngrx/signals/events';
 import { CartItem, CartStore } from './store/cart.store';
-import { cartEvents } from './store/cart.events';
 
 @Component({
   selector: 'app-signal-store-demo',
@@ -12,6 +10,11 @@ import { cartEvents } from './store/cart.events';
 })
 export class SignalStoreComponent {
   readonly store = inject(CartStore);
+
+  readonly withStateOpen = signal(false);
+  readonly withComputedOpen = signal(false);
+  readonly withMethodsOpen = signal(false);
+  readonly rxMethodOpen = signal(false);
 
   toggleItem(item: CartItem) {
     this.store.toggleInCart(item.id);

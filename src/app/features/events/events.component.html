@@ -1,42 +1,149 @@
 <div class="max-w-8xl mx-auto p-4 space-y-8">
-  <h1 class="text-3xl font-bold">Events</h1>
-  <p class="text-lg opacity-70">
-    Events decouple <em>what happened</em> from <em>how state changes</em>.
-  </p>
+  <!-- Page header -->
+  <div>
+    <h1 class="text-3xl font-bold">Events</h1>
+    <p class="text-lg opacity-70 mt-1">
+      Think of events like announcements. Any part of the app can hear them — without knowing who
+      else is listening.
+    </p>
+  </div>
 
-  <!-- Intro -->
+  <!-- How it works -->
   <section class="card bg-base-100 shadow-xl">
-    <div class="card-body">
+    <div class="card-body space-y-6">
       <h2 class="card-title text-2xl">How it works</h2>
-      <p class="opacity-70 mb-4">
-        An event is just a fact — <code>itemAdded</code>, <code>itemRemoved</code>. Any store can
-        listen. No direct coupling between stores.
+
+      <!-- Flow diagram -->
+      <div class="flex flex-wrap items-center justify-center gap-3 py-4">
+        <div class="rounded-lg border-2 border-info bg-info/10 px-4 py-3 text-center">
+          <div class="text-xs font-bold text-info mb-1">COMPONENT</div>
+          <code class="text-sm">dispatch(itemAdded)</code>
+        </div>
+        <div class="text-2xl opacity-40">→</div>
+        <div class="rounded-lg border-2 border-warning bg-warning/10 px-4 py-3 text-center">
+          <div class="text-xs font-bold text-warning mb-1">EVENT BUS</div>
+          <code class="text-sm">itemAdded</code>
+        </div>
+        <div class="text-2xl opacity-40">→</div>
+        <div class="flex flex-col gap-3">
+          <div class="rounded-lg border-2 border-primary bg-primary/10 px-3 py-2 text-center">
+            <div class="text-xs font-bold text-primary mb-1">CartStore</div>
+            <div class="text-xs opacity-70">updates items</div>
+          </div>
+          <div class="rounded-lg border-2 border-secondary bg-secondary/10 px-3 py-2 text-center">
+            <div class="text-xs font-bold text-secondary mb-1">NotificationStore</div>
+            <div class="text-xs opacity-70">logs event</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-sm opacity-60 text-center">
+        No direct connection between the stores. They only share the event definition.
       </p>
-      <div class="flex flex-wrap gap-3">
-        <span class="badge badge-primary badge-outline p-3">
-          <code>eventGroup</code> — defines the contract
-        </span>
-        <span class="badge badge-secondary badge-outline p-3">
-          <code>withReducer</code> — reacts to events
-        </span>
-        <span class="badge badge-accent badge-outline p-3">
-          <code>injectDispatch</code> — fires events
-        </span>
+
+      <!-- Concept pills with descriptions and code toggles -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="border border-primary/30 bg-primary/5 rounded-lg p-3">
+          <div class="badge badge-primary badge-outline mb-2"><code>eventGroup</code></div>
+          <p class="text-sm opacity-70">
+            Defines the event contract — what events exist and what data they carry.
+          </p>
+          <button
+            class="btn btn-ghost btn-xs mt-2 gap-1 text-primary"
+            (click)="eventGroupOpen.set(!eventGroupOpen())"
+            [attr.aria-expanded]="eventGroupOpen()"
+          >
+            {{ eventGroupOpen() ? '▼' : '▶' }} View code
+          </button>
+          @if (eventGroupOpen()) {
+            <pre
+              class="bg-base-200 rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+            ><code>export const cartEvents = eventGroup(&#123;
+  source: 'Cart',
+  events: &#123;
+    itemAdded: type&lt;&#123; name: string; price: number &#125;&gt;(),
+    itemRemoved: type&lt;&#123; name: string &#125;&gt;(),
+  &#125;,
+&#125;);</code></pre>
+          }
+        </div>
+
+        <div class="border border-secondary/30 bg-secondary/5 rounded-lg p-3">
+          <div class="badge badge-secondary badge-outline mb-2"><code>withReducer</code></div>
+          <p class="text-sm opacity-70">
+            Listens to events and updates the store's state in response.
+          </p>
+          <button
+            class="btn btn-ghost btn-xs mt-2 gap-1 text-secondary"
+            (click)="withReducerOpen.set(!withReducerOpen())"
+            [attr.aria-expanded]="withReducerOpen()"
+          >
+            {{ withReducerOpen() ? '▼' : '▶' }} View code
+          </button>
+          @if (withReducerOpen()) {
+            <pre
+              class="bg-base-200 rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+            ><code>withReducer(
+  on(cartEvents.itemAdded, (&#123; payload &#125;, state) => (&#123;
+    notifications: [
+      ...state.notifications,
+      &#123;
+        id: state.nextId,
+        message: `Added "$&#123;payload.name&#125;"`,
+        timestamp: new Date().toLocaleTimeString(),
+      &#125;,
+    ],
+    nextId: state.nextId + 1,
+  &#125;)),
+)</code></pre>
+          }
+        </div>
+
+        <div class="border border-accent/30 bg-accent/5 rounded-lg p-3">
+          <div class="badge badge-accent badge-outline mb-2"><code>injectDispatch</code></div>
+          <p class="text-sm opacity-70">
+            Fires events from a component. Any store listening will react.
+          </p>
+          <button
+            class="btn btn-ghost btn-xs mt-2 gap-1 text-accent"
+            (click)="injectDispatchOpen.set(!injectDispatchOpen())"
+            [attr.aria-expanded]="injectDispatchOpen()"
+          >
+            {{ injectDispatchOpen() ? '▼' : '▶' }} View code
+          </button>
+          @if (injectDispatchOpen()) {
+            <pre
+              class="bg-base-200 rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+            ><code>private readonly dispatch = injectDispatch(cartEvents);
+
+toggleItem(item: CartItem) &#123;
+  if (item.inCart) &#123;
+    this.dispatch.itemRemoved(&#123; name: item.name &#125;);
+  &#125; else &#123;
+    this.dispatch.itemAdded(&#123;
+      name: item.name,
+      price: item.price,
+    &#125;);
+  &#125;
+&#125;</code></pre>
+          }
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Live demo -->
   <section class="card bg-base-100 shadow-xl border-2 border-info">
-    <div class="card-body">
-      <h2 class="card-title text-2xl">Live Demo</h2>
-      <p class="opacity-70 mb-6">
-        Toggle items below. Watch both stores react to the same events — independently.
-      </p>
+    <div class="card-body space-y-6">
+      <div>
+        <h2 class="card-title text-2xl">Live Demo</h2>
+        <p class="opacity-70 mt-1">
+          Toggle items below. Watch both stores react to the same events — independently.
+        </p>
+      </div>
 
-      <!-- Product toggle buttons -->
-      <h3 class="font-semibold mb-3">Products</h3>
-      <ul class="space-y-2 mb-8">
+      <h3 class="font-semibold">Products</h3>
+      <ul class="space-y-2">
         @for (item of cartStore.cartItems(); track item.id) {
           <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
             <div>
@@ -55,13 +162,14 @@
         }
       </ul>
 
-      <!-- Two stores side by side -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="p-4 bg-base-200 rounded-lg">
-          <h3 class="font-bold mb-3 flex items-center gap-2">
+          <h3 class="font-bold mb-1 flex items-center gap-2">
             <span class="badge badge-primary">CartStore</span>
-            <span class="text-sm opacity-60">updated via method</span>
           </h3>
+          <p class="text-xs opacity-60 mb-3">
+            Reacts via <code>withMethods</code> — updates item list and total
+          </p>
           @if (cartStore.cartOnlyItems().length === 0) {
             <p class="text-sm opacity-50">No items in cart yet.</p>
           } @else {
@@ -78,10 +186,12 @@
         </div>
 
         <div class="p-4 bg-base-200 rounded-lg">
-          <h3 class="font-bold mb-3 flex items-center gap-2">
+          <h3 class="font-bold mb-1 flex items-center gap-2">
             <span class="badge badge-secondary">NotificationStore</span>
-            <span class="text-sm opacity-60">reacts via withReducer</span>
           </h3>
+          <p class="text-xs opacity-60 mb-3">
+            Reacts via <code>withReducer</code> — logs every event independently
+          </p>
           @if (notificationStore.notifications().length === 0) {
             <p class="text-sm opacity-50">No events fired yet.</p>
           } @else {
@@ -99,12 +209,15 @@
     </div>
   </section>
 
-  <!-- Key point -->
+  <!-- Key insight -->
   <section class="card bg-base-100 shadow-xl">
     <div class="card-body">
-      <p class="text-center text-lg font-semibold">
-        Neither store knows about the other. They only share the event definition.
-      </p>
+      <div class="alert bg-base-200 border border-base-300">
+        <span
+          >💡 <strong>Key insight:</strong> Neither store knows about the other. They only share the
+          event definition. Add a third store tomorrow — zero changes to existing code.</span
+        >
+      </div>
     </div>
   </section>
 </div>

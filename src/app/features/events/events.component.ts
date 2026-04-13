@@ -1,5 +1,4 @@
-// src/app/features/events/events.component.ts
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { injectDispatch } from '@ngrx/signals/events';
 import { CartItem, CartStore } from '../signal-store/store/cart.store';
@@ -16,6 +15,10 @@ export class EventsComponent {
   readonly cartStore = inject(CartStore);
   readonly notificationStore = inject(NotificationStore);
   private readonly dispatch = injectDispatch(cartEvents);
+
+  readonly eventGroupOpen = signal(false);
+  readonly withReducerOpen = signal(false);
+  readonly injectDispatchOpen = signal(false);
 
   toggleItem(item: CartItem) {
     this.cartStore.toggleInCart(item.id);
