@@ -1,5 +1,11 @@
 {
   "permissions": {
-    "allow": ["WebSearch", "WebFetch(domain:ngrx.io)", "Bash(npx ng:*)", "Bash(npx tsc:*)"]
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:ngrx.io)",
+      "Bash(npx ng:*)",
+      "Bash(npx tsc:*)",
+      "mcp__plugin_context7_context7__query-docs"
+    ]
   }
 }

@@ -66,7 +66,7 @@
       @if (withStateOpen()) {
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background:#1e1e2e;color:#cdd6f4"
+          style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
   <span style="color:#cba6f7">withState</span>(&#123;
     <span style="color:#89b4fa">cartItems</span>: [
@@ -116,7 +116,7 @@
       @if (withComputedOpen()) {
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background:#1e1e2e;color:#cdd6f4"
+          style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">withComputed</span>((&#123; <span style="color:#89b4fa">cartItems</span> &#125;) => (&#123;
   <span style="color:#89b4fa">cartOnlyItems</span>: <span style="color:#cba6f7">computed</span>(() => <span style="color:#89b4fa">cartItems</span>().<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)),
   <span style="color:#89b4fa">cartTotal</span>: <span style="color:#cba6f7">computed</span>(() =>
@@ -188,7 +188,7 @@
       @if (withMethodsOpen()) {
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background:#1e1e2e;color:#cdd6f4"
+          style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">withMethods</span>((store) => (&#123;
   <span style="color:#89b4fa">toggleInCart</span>(itemId: <span style="color:#cba6f7">number</span>) &#123;
     <span style="color:#cba6f7">patchState</span>(store, (state) => (&#123;
@@ -261,7 +261,7 @@
       @if (rxMethodOpen()) {
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background:#1e1e2e;color:#cdd6f4"
+          style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
   <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span style="color:#cba6f7">void</span>&gt;(
     <span style="color:#cba6f7">pipe</span>(

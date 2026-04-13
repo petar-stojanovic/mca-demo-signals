@@ -46,7 +46,7 @@
       @if (withLoggerOpen()) {
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background:#1e1e2e;color:#cdd6f4"
+          style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#6c7086">// Define the feature (once):</span>
 <span style="color:#cba6f7">export</span> <span style="color:#cba6f7">function</span> <span style="color:#89b4fa">withLogger</span>(<span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>) &#123;
   <span style="color:#cba6f7">return</span> <span style="color:#cba6f7">signalStoreFeature</span>(
@@ -79,7 +79,7 @@
           </p>
           <pre
             class="rounded p-3 text-xs mt-2 overflow-x-auto"
-            style="background:#1e1e2e;color:#a6e3a1"
+            style="background: #1e1e2e; color: #a6e3a1"
           ><code>[CART-STORE] state changed &#123; cartItems: [...] &#125;
 [DEMO-API-STORE] state changed &#123; requestLoading: true &#125;</code></pre>
         </div>
@@ -116,7 +116,7 @@
       @if (withRequestStateOpen()) {
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background:#1e1e2e;color:#cdd6f4"
+          style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#6c7086">// Add to any store that makes HTTP calls (one line):</span>
 <span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">DemoApiStore</span> = <span style="color:#cba6f7">signalStore</span>(
   <span style="color:#cba6f7">withRequestStateAndErrorHandling</span>(),  <span style="color:#6c7086">// ← adds loading/success/error state</span>

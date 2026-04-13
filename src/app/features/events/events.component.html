@@ -13,29 +13,7 @@
     <div class="card-body space-y-6">
       <h2 class="card-title text-2xl">How it works</h2>
 
-      <!-- Flow diagram -->
-      <div class="flex flex-wrap items-center justify-center gap-3 py-4">
-        <div class="rounded-lg border-2 border-info bg-info/10 px-4 py-3 text-center">
-          <div class="text-xs font-bold text-info mb-1">COMPONENT</div>
-          <code class="text-sm">dispatch(itemAdded)</code>
-        </div>
-        <div class="text-2xl opacity-40">→</div>
-        <div class="rounded-lg border-2 border-warning bg-warning/10 px-4 py-3 text-center">
-          <div class="text-xs font-bold text-warning mb-1">EVENT BUS</div>
-          <code class="text-sm">itemAdded</code>
-        </div>
-        <div class="text-2xl opacity-40">→</div>
-        <div class="flex flex-col gap-3">
-          <div class="rounded-lg border-2 border-primary bg-primary/10 px-3 py-2 text-center">
-            <div class="text-xs font-bold text-primary mb-1">CartStore</div>
-            <div class="text-xs opacity-70">updates items</div>
-          </div>
-          <div class="rounded-lg border-2 border-secondary bg-secondary/10 px-3 py-2 text-center">
-            <div class="text-xs font-bold text-secondary mb-1">NotificationStore</div>
-            <div class="text-xs opacity-70">logs event</div>
-          </div>
-        </div>
-      </div>
+      <img src="app-architecture-with-events-plugin.png" alt="" class="rounded-lg w-full" />
 
       <p class="text-sm opacity-60 text-center">
         No direct connection between the stores. They only share the event definition.
@@ -44,9 +22,13 @@
       <!-- Concept pills with descriptions and code toggles -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div class="border border-primary/30 bg-primary/5 rounded-lg p-3">
-          <div class="badge badge-primary badge-outline mb-2"><code>eventGroup</code></div>
+          <div class="flex gap-1 mb-2">
+            <div class="badge badge-primary badge-outline"><code>event</code></div>
+            <div class="badge badge-primary badge-outline"><code>eventGroup</code></div>
+          </div>
           <p class="text-sm opacity-70">
-            Defines the event contract — what events exist and what data they carry.
+            Two ways to define events. Use <code>event()</code> for standalone events,
+            <code>eventGroup()</code> to share a source prefix across many events.
           </p>
           <button
             class="btn btn-ghost btn-xs mt-2 gap-1 text-primary"
@@ -58,12 +40,24 @@
           @if (eventGroupOpen()) {
             <pre
               class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
-              style="background:#1e1e2e;color:#cdd6f4"
-            ><code><span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">cartEvents</span> = <span style="color:#cba6f7">eventGroup</span>(&#123;
+              style="background: #1e1e2e; color: #cdd6f4"
+            ><code><span style="color:#6c7086">// Standalone — one event at a time:</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">queryChanged</span> = <span
+                style="color:#cba6f7">event</span>(
+  <span style="color:#a6e3a1">'[Book Search Page] Query Changed'</span>,
+  <span style="color:#cba6f7">type</span>&lt;<span style="color:#cba6f7">string</span>&gt;()
+);
+
+<span style="color:#6c7086">// Grouped — source prefix added automatically:</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">cartEvents</span> = <span
+                style="color:#cba6f7">eventGroup</span>(&#123;
   <span style="color:#89b4fa">source</span>: <span style="color:#a6e3a1">'Cart'</span>,
   <span style="color:#89b4fa">events</span>: &#123;
-    <span style="color:#89b4fa">itemAdded</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>; <span style="color:#89b4fa">price</span>: <span style="color:#cba6f7">number</span> &#125;&gt;(),
-    <span style="color:#89b4fa">itemRemoved</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span> &#125;&gt;(),
+    <span style="color:#89b4fa">itemAdded</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
+                style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>; <span
+                style="color:#89b4fa">price</span>: <span style="color:#cba6f7">number</span> &#125;&gt;(),
+    <span style="color:#89b4fa">itemRemoved</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
+                style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span> &#125;&gt;(),
   &#125;,
 &#125;);</code></pre>
           }
@@ -84,18 +78,22 @@
           @if (withReducerOpen()) {
             <pre
               class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
-              style="background:#1e1e2e;color:#cdd6f4"
+              style="background: #1e1e2e; color: #cdd6f4"
             ><code><span style="color:#cba6f7">withReducer</span>(
-  <span style="color:#cba6f7">on</span>(cartEvents.<span style="color:#89b4fa">itemAdded</span>, (&#123; <span style="color:#89b4fa">payload</span> &#125;, state) => (&#123;
+  <span style="color:#cba6f7">on</span>(cartEvents.<span style="color:#89b4fa">itemAdded</span>, (&#123; <span
+                style="color:#89b4fa">payload</span> &#125;, state) => (&#123;
     <span style="color:#89b4fa">notifications</span>: [
       ...state.<span style="color:#89b4fa">notifications</span>,
       &#123;
         <span style="color:#89b4fa">id</span>: state.<span style="color:#89b4fa">nextId</span>,
-        <span style="color:#89b4fa">message</span>: <span style="color:#a6e3a1">`Added "$&#123;payload.name&#125;"`</span>,
-        <span style="color:#89b4fa">timestamp</span>: <span style="color:#cba6f7">new</span> Date().<span style="color:#89b4fa">toLocaleTimeString</span>(),
+        <span style="color:#89b4fa">message</span>: <span
+                style="color:#a6e3a1">`Added "$&#123;payload.name&#125;"`</span>,
+        <span style="color:#89b4fa">timestamp</span>: <span style="color:#cba6f7">new</span> Date().<span
+                style="color:#89b4fa">toLocaleTimeString</span>(),
       &#125;,
     ],
-    <span style="color:#89b4fa">nextId</span>: state.<span style="color:#89b4fa">nextId</span> + <span style="color:#fab387">1</span>,
+    <span style="color:#89b4fa">nextId</span>: state.<span style="color:#89b4fa">nextId</span> + <span
+                style="color:#fab387">1</span>,
   &#125;)),
 )</code></pre>
           }
@@ -116,27 +114,22 @@
           @if (injectDispatchOpen()) {
             <pre
               class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
-              style="background:#1e1e2e;color:#cdd6f4"
+              style="background: #1e1e2e; color: #cdd6f4"
             ><code><span style="color:#6c7086">// From a component:</span>
-<span style="color:#cba6f7">private</span> <span style="color:#cba6f7">readonly</span> <span style="color:#89b4fa">dispatch</span> = <span style="color:#cba6f7">injectDispatch</span>(cartEvents);
+<span style="color:#cba6f7">private</span> <span style="color:#cba6f7">readonly</span> <span style="color:#89b4fa">dispatch</span> = <span
+                style="color:#cba6f7">injectDispatch</span>(cartEvents);
 
 <span style="color:#89b4fa">toggleItem</span>(item: CartItem) &#123;
   <span style="color:#cba6f7">if</span> (item.<span style="color:#89b4fa">inCart</span>) &#123;
-    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemRemoved</span>(&#123; <span style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span> &#125;);
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemRemoved</span>(&#123; <span
+                style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span> &#125;);
   &#125; <span style="color:#cba6f7">else</span> &#123;
-    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemAdded</span>(&#123; <span style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span>, <span style="color:#89b4fa">price</span>: item.<span style="color:#89b4fa">price</span> &#125;);
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemAdded</span>(&#123; <span
+                style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span>, <span
+                style="color:#89b4fa">price</span>: item.<span style="color:#89b4fa">price</span> &#125;);
   &#125;
 &#125;
-
-<span style="color:#6c7086">// From a store — same pattern, inject in the factory:</span>
-<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">SomeStore</span> = <span style="color:#cba6f7">signalStore</span>(
-  <span style="color:#cba6f7">withMethods</span>((store, <span style="color:#89b4fa">dispatch</span> = <span style="color:#cba6f7">injectDispatch</span>(cartEvents)) => (&#123;
-    <span style="color:#89b4fa">checkout</span>() &#123;
-      <span style="color:#cba6f7">patchState</span>(store, &#123; <span style="color:#89b4fa">checkedOut</span>: <span style="color:#fab387">true</span> &#125;);
-      <span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">cartCleared</span>();
-    &#125;,
-  &#125;)),
-);</code></pre>
+</code></pre>
           }
         </div>
       </div>
