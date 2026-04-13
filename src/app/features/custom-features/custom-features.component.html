@@ -45,27 +45,28 @@
       </button>
       @if (withLoggerOpen()) {
         <pre
-          class="bg-base-200 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-        ><code>// Define the feature (once):
-export function withLogger(name: string) &#123;
-  return signalStoreFeature(
-    withHooks(&#123;
-      onInit(store) &#123;
-        effect(() => &#123;
-          const state = getState(store);
-          console.log(`$&#123;name&#125; state changed`, state);
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background:#1e1e2e;color:#cdd6f4"
+        ><code><span style="color:#6c7086">// Define the feature (once):</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">function</span> <span style="color:#89b4fa">withLogger</span>(<span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>) &#123;
+  <span style="color:#cba6f7">return</span> <span style="color:#cba6f7">signalStoreFeature</span>(
+    <span style="color:#cba6f7">withHooks</span>(&#123;
+      <span style="color:#89b4fa">onInit</span>(store) &#123;
+        <span style="color:#cba6f7">effect</span>(() => &#123;
+          <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">state</span> = <span style="color:#cba6f7">getState</span>(store);
+          console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">`$&#123;name&#125; state changed`</span>, state);
         &#125;);
       &#125;,
     &#125;),
   );
 &#125;
 
-// Add to any store (one line):
-export const CartStore = signalStore(
-  withLogger('[CART-STORE]'),  // ← this is all you add
-  withState(initialState),
-  withComputed(...),
-  withMethods(...),
+<span style="color:#6c7086">// Add to any store (one line):</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withLogger</span>(<span style="color:#a6e3a1">'[CART-STORE]'</span>),  <span style="color:#6c7086">// ← this is all you add</span>
+  <span style="color:#cba6f7">withState</span>(initialState),
+  <span style="color:#cba6f7">withComputed</span>(...),
+  <span style="color:#cba6f7">withMethods</span>(...),
 );</code></pre>
       }
 
@@ -77,7 +78,8 @@ export const CartStore = signalStore(
             the SignalStore or Events pages. You'll see output like:
           </p>
           <pre
-            class="bg-base-300 rounded p-3 text-xs mt-2 overflow-x-auto"
+            class="rounded p-3 text-xs mt-2 overflow-x-auto"
+            style="background:#1e1e2e;color:#a6e3a1"
           ><code>[CART-STORE] state changed &#123; cartItems: [...] &#125;
 [DEMO-API-STORE] state changed &#123; requestLoading: true &#125;</code></pre>
         </div>
@@ -113,20 +115,21 @@ export const CartStore = signalStore(
       </button>
       @if (withRequestStateOpen()) {
         <pre
-          class="bg-base-200 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-        ><code>// Add to any store that makes HTTP calls (one line):
-export const DemoApiStore = signalStore(
-  withRequestStateAndErrorHandling(),  // ← adds loading/success/error state
-  withState(&#123; users: [] &#125;),
-  withMethods((store, http = inject(HttpClient)) => (&#123;
-    loadUsers: rxMethod&lt;void&gt;(
-      pipe(
-        tap(() => store.setLoading()),
-        switchMap(() =>
-          http.get&lt;User[]&gt;('/api/users').pipe(
-            store.handleRequest(&#123;
-              next: (users) => patchState(store, &#123; users &#125;),
-              error: (err) => console.error(err),
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background:#1e1e2e;color:#cdd6f4"
+        ><code><span style="color:#6c7086">// Add to any store that makes HTTP calls (one line):</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">DemoApiStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withRequestStateAndErrorHandling</span>(),  <span style="color:#6c7086">// ← adds loading/success/error state</span>
+  <span style="color:#cba6f7">withState</span>(&#123; <span style="color:#89b4fa">users</span>: [] &#125;),
+  <span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
+    <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span style="color:#cba6f7">void</span>&gt;(
+      <span style="color:#cba6f7">pipe</span>(
+        <span style="color:#cba6f7">tap</span>(() => store.<span style="color:#89b4fa">setLoading</span>()),
+        <span style="color:#cba6f7">switchMap</span>(() =>
+          http.<span style="color:#89b4fa">get</span>&lt;User[]&gt;(<span style="color:#a6e3a1">'/api/users'</span>).<span style="color:#89b4fa">pipe</span>(
+            store.<span style="color:#89b4fa">handleRequest</span>(&#123;
+              <span style="color:#89b4fa">next</span>: (users) => <span style="color:#cba6f7">patchState</span>(store, &#123; users &#125;),
+              <span style="color:#89b4fa">error</span>: (err) => console.<span style="color:#89b4fa">error</span>(err),
             &#125;)
           )
         )

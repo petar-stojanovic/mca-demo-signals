@@ -57,12 +57,13 @@
           </button>
           @if (eventGroupOpen()) {
             <pre
-              class="bg-base-200 rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
-            ><code>export const cartEvents = eventGroup(&#123;
-  source: 'Cart',
-  events: &#123;
-    itemAdded: type&lt;&#123; name: string; price: number &#125;&gt;(),
-    itemRemoved: type&lt;&#123; name: string &#125;&gt;(),
+              class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+              style="background:#1e1e2e;color:#cdd6f4"
+            ><code><span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">cartEvents</span> = <span style="color:#cba6f7">eventGroup</span>(&#123;
+  <span style="color:#89b4fa">source</span>: <span style="color:#a6e3a1">'Cart'</span>,
+  <span style="color:#89b4fa">events</span>: &#123;
+    <span style="color:#89b4fa">itemAdded</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>; <span style="color:#89b4fa">price</span>: <span style="color:#cba6f7">number</span> &#125;&gt;(),
+    <span style="color:#89b4fa">itemRemoved</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span> &#125;&gt;(),
   &#125;,
 &#125;);</code></pre>
           }
@@ -82,18 +83,19 @@
           </button>
           @if (withReducerOpen()) {
             <pre
-              class="bg-base-200 rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
-            ><code>withReducer(
-  on(cartEvents.itemAdded, (&#123; payload &#125;, state) => (&#123;
-    notifications: [
-      ...state.notifications,
+              class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+              style="background:#1e1e2e;color:#cdd6f4"
+            ><code><span style="color:#cba6f7">withReducer</span>(
+  <span style="color:#cba6f7">on</span>(cartEvents.<span style="color:#89b4fa">itemAdded</span>, (&#123; <span style="color:#89b4fa">payload</span> &#125;, state) => (&#123;
+    <span style="color:#89b4fa">notifications</span>: [
+      ...state.<span style="color:#89b4fa">notifications</span>,
       &#123;
-        id: state.nextId,
-        message: `Added "$&#123;payload.name&#125;"`,
-        timestamp: new Date().toLocaleTimeString(),
+        <span style="color:#89b4fa">id</span>: state.<span style="color:#89b4fa">nextId</span>,
+        <span style="color:#89b4fa">message</span>: <span style="color:#a6e3a1">`Added "$&#123;payload.name&#125;"`</span>,
+        <span style="color:#89b4fa">timestamp</span>: <span style="color:#cba6f7">new</span> Date().<span style="color:#89b4fa">toLocaleTimeString</span>(),
       &#125;,
     ],
-    nextId: state.nextId + 1,
+    <span style="color:#89b4fa">nextId</span>: state.<span style="color:#89b4fa">nextId</span> + <span style="color:#fab387">1</span>,
   &#125;)),
 )</code></pre>
           }
@@ -113,24 +115,25 @@
           </button>
           @if (injectDispatchOpen()) {
             <pre
-              class="bg-base-200 rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
-            ><code>// From a component:
-private readonly dispatch = injectDispatch(cartEvents);
+              class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+              style="background:#1e1e2e;color:#cdd6f4"
+            ><code><span style="color:#6c7086">// From a component:</span>
+<span style="color:#cba6f7">private</span> <span style="color:#cba6f7">readonly</span> <span style="color:#89b4fa">dispatch</span> = <span style="color:#cba6f7">injectDispatch</span>(cartEvents);
 
-toggleItem(item: CartItem) &#123;
-  if (item.inCart) &#123;
-    this.dispatch.itemRemoved(&#123; name: item.name &#125;);
-  &#125; else &#123;
-    this.dispatch.itemAdded(&#123; name: item.name, price: item.price &#125;);
+<span style="color:#89b4fa">toggleItem</span>(item: CartItem) &#123;
+  <span style="color:#cba6f7">if</span> (item.<span style="color:#89b4fa">inCart</span>) &#123;
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemRemoved</span>(&#123; <span style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span> &#125;);
+  &#125; <span style="color:#cba6f7">else</span> &#123;
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemAdded</span>(&#123; <span style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span>, <span style="color:#89b4fa">price</span>: item.<span style="color:#89b4fa">price</span> &#125;);
   &#125;
 &#125;
 
-// From a store — same pattern, inject in the factory:
-export const SomeStore = signalStore(
-  withMethods((store, dispatch = injectDispatch(cartEvents)) => (&#123;
-    checkout() &#123;
-      patchState(store, &#123; checkedOut: true &#125;);
-      dispatch.cartCleared();
+<span style="color:#6c7086">// From a store — same pattern, inject in the factory:</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">SomeStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withMethods</span>((store, <span style="color:#89b4fa">dispatch</span> = <span style="color:#cba6f7">injectDispatch</span>(cartEvents)) => (&#123;
+    <span style="color:#89b4fa">checkout</span>() &#123;
+      <span style="color:#cba6f7">patchState</span>(store, &#123; <span style="color:#89b4fa">checkedOut</span>: <span style="color:#fab387">true</span> &#125;);
+      <span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">cartCleared</span>();
     &#125;,
   &#125;)),
 );</code></pre>

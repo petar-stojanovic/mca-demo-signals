@@ -65,16 +65,17 @@
       </button>
       @if (withStateOpen()) {
         <pre
-          class="bg-base-200 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-        ><code>export const CartStore = signalStore(
-  withState(&#123;
-    cartItems: [
-      &#123; id: 1, name: 'Wireless Headphones', price: 59.99, inCart: false &#125;,
-      &#123; id: 2, name: 'Mechanical Keyboard',  price: 89.99, inCart: false &#125;,
-      // ...
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background:#1e1e2e;color:#cdd6f4"
+        ><code><span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withState</span>(&#123;
+    <span style="color:#89b4fa">cartItems</span>: [
+      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">1</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Wireless Headphones'</span>, <span style="color:#89b4fa">price</span>: <span style="color:#fab387">59.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
+      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">2</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Mechanical Keyboard'</span>,  <span style="color:#89b4fa">price</span>: <span style="color:#fab387">89.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
+      <span style="color:#6c7086">// ...</span>
     ]
   &#125;),
-  // cartItems is now a signal: store.cartItems()
+  <span style="color:#6c7086">// cartItems is now a signal: store.cartItems()</span>
 );</code></pre>
       }
 
@@ -114,13 +115,14 @@
       </button>
       @if (withComputedOpen()) {
         <pre
-          class="bg-base-200 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-        ><code>withComputed((&#123; cartItems &#125;) => (&#123;
-  cartOnlyItems: computed(() => cartItems().filter(item => item.inCart)),
-  cartTotal: computed(() =>
-    cartItems()
-      .filter(item => item.inCart)
-      .reduce((sum, item) => sum + item.price, 0)
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background:#1e1e2e;color:#cdd6f4"
+        ><code><span style="color:#cba6f7">withComputed</span>((&#123; <span style="color:#89b4fa">cartItems</span> &#125;) => (&#123;
+  <span style="color:#89b4fa">cartOnlyItems</span>: <span style="color:#cba6f7">computed</span>(() => <span style="color:#89b4fa">cartItems</span>().<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)),
+  <span style="color:#89b4fa">cartTotal</span>: <span style="color:#cba6f7">computed</span>(() =>
+    <span style="color:#89b4fa">cartItems</span>()
+      .<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)
+      .<span style="color:#89b4fa">reduce</span>((sum, item) => sum + item.<span style="color:#89b4fa">price</span>, <span style="color:#fab387">0</span>)
   ),
 &#125;))</code></pre>
       }
@@ -185,12 +187,13 @@
       </button>
       @if (withMethodsOpen()) {
         <pre
-          class="bg-base-200 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-        ><code>withMethods((store) => (&#123;
-  toggleInCart(itemId: number) &#123;
-    patchState(store, (state) => (&#123;
-      cartItems: state.cartItems.map((item) =>
-        item.id === itemId ? &#123; ...item, inCart: !item.inCart &#125; : item
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background:#1e1e2e;color:#cdd6f4"
+        ><code><span style="color:#cba6f7">withMethods</span>((store) => (&#123;
+  <span style="color:#89b4fa">toggleInCart</span>(itemId: <span style="color:#cba6f7">number</span>) &#123;
+    <span style="color:#cba6f7">patchState</span>(store, (state) => (&#123;
+      <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span style="color:#89b4fa">map</span>((item) =>
+        item.<span style="color:#89b4fa">id</span> === itemId ? &#123; ...item, <span style="color:#89b4fa">inCart</span>: !item.<span style="color:#89b4fa">inCart</span> &#125; : item
       ),
     &#125;));
   &#125;,
@@ -257,16 +260,17 @@
       </button>
       @if (rxMethodOpen()) {
         <pre
-          class="bg-base-200 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-        ><code>withMethods((store, http = inject(HttpClient)) => (&#123;
-  loadUsers: rxMethod&lt;void&gt;(
-    pipe(
-      tap(() => store.setLoading()),
-      switchMap(() =>
-        http.get&lt;User[]&gt;('/api/users').pipe(
-          store.handleRequest(&#123;
-            next: (users) => patchState(store, &#123; users &#125;),
-            error: (err) => console.error(err),
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background:#1e1e2e;color:#cdd6f4"
+        ><code><span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
+  <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span style="color:#cba6f7">void</span>&gt;(
+    <span style="color:#cba6f7">pipe</span>(
+      <span style="color:#cba6f7">tap</span>(() => store.<span style="color:#89b4fa">setLoading</span>()),
+      <span style="color:#cba6f7">switchMap</span>(() =>
+        http.<span style="color:#89b4fa">get</span>&lt;User[]&gt;(<span style="color:#a6e3a1">'/api/users'</span>).<span style="color:#89b4fa">pipe</span>(
+          store.<span style="color:#89b4fa">handleRequest</span>(&#123;
+            <span style="color:#89b4fa">next</span>: (users) => <span style="color:#cba6f7">patchState</span>(store, &#123; users &#125;),
+            <span style="color:#89b4fa">error</span>: (err) => console.<span style="color:#89b4fa">error</span>(err),
           &#125;)
         )
       )
