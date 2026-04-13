@@ -7,7 +7,15 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
     <section class="min-h-screen flex items-center justify-center">
       <div class="w-full max-w-5xl space-y-6">
         <div class="text-center space-y-2">
-          <h2 class="text-3xl font-bold">The Three Primitives</h2>
+          <h2 class="text-3xl font-bold">Signals</h2>
+          <p>
+            A signal is a wrapper around a value that notifies interested consumers when that value
+            changes.
+          </p>
+          <p>Signals can contain any value, from primitives to complex data structures.</p>
+
+          <hr class="mt-5 opacity-10" />
+
           <p class="opacity-70">
             All three share the same <code>count</code> signal — increment it and watch each one
             react.
@@ -23,14 +31,15 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
               </h3>
               <ul class="text-sm opacity-70 space-y-1">
                 <li>Holds a value</li>
-                <li>Read it: <code>count()</code></li>
+                <li><code>countNumber = signal(0);</code></li>
+                <li>Read it: <code>countNumber()</code></li>
                 <li>Change it: <code>.set()</code> or <code>.update()</code></li>
                 <li>Angular updates the UI automatically</li>
               </ul>
               <div class="stats shadow w-full">
                 <div class="stat">
                   <div class="stat-title">count</div>
-                  <div class="stat-value text-primary">{{ count() }}</div>
+                  <div class="stat-value text-primary">{{ countNumber() }}</div>
                 </div>
               </div>
               <button class="btn btn-primary btn-sm w-full font-mono" (click)="increment()">
@@ -101,28 +110,29 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
   `,
 })
 export class SignalPrimitivesDemoComponent {
-  readonly count = signal(0);
-  readonly doubled = computed(() => this.count() * 2);
+  readonly countNumber = signal(0);
+
+  readonly doubled = computed(() => this.countNumber() * 2);
   readonly effectLog = signal<string[]>([]);
 
   private readonly effectExample = effect(() => {
     // reads count — tracked
-    const val = this.count();
+    const val = this.countNumber();
 
     // writes effectLog — not tracked
     this.effectLog.update((log) => [...log, `count changed → ${val}`]);
   });
 
   increment() {
-    this.count.update((c) => c + 1);
+    this.countNumber.update((c) => c + 1);
   }
 
   setRandom() {
-    this.count.set(Math.floor(Math.random() * 100) + 1);
+    this.countNumber.set(Math.floor(Math.random() * 100) + 1);
   }
 
   reset() {
-    this.count.set(0);
+    this.countNumber.set(0);
     this.effectLog.set([]);
   }
 }
