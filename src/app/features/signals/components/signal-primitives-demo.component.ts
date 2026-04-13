@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
   selector: 'app-signal-primitives-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="min-h-screen flex items-center justify-center">
+    <section class="min-h-[calc(100vh-10rem)] flex items-center justify-center">
       <div class="w-full max-w-5xl space-y-6">
         <div class="text-center space-y-2">
           <h2 class="text-3xl font-bold">Signals</h2>

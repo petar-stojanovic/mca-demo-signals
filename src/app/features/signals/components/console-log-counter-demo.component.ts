@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
   selector: 'app-console-log-counter-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="min-h-screen flex items-center justify-center">
+    <section class="min-h-[calc(100vh-10rem)] flex items-center justify-center">
       <div class="card">
         <h2 class="card-title text-2xl mb-6">Open Console and see the logs</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

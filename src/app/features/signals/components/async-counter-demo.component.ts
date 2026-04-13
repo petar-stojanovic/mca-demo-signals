@@ -10,7 +10,7 @@ import {
   selector: 'app-async-counter-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="min-h-screen flex items-center justify-center">
+    <section class="min-h-[calc(100vh-10rem)] flex items-center justify-center mb-12">
       <div class="card w-full">
         <h2 class="card-title text-2xl mb-1">Async Updates</h2>
         <p class="text-sm opacity-60 mb-6">
