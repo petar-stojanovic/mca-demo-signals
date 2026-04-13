@@ -66,7 +66,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
               <div class="stats shadow w-full">
                 <div class="stat">
                   <div class="stat-title">doubled = count × 2</div>
-                  <div class="stat-value text-secondary">{{ doubled() }}</div>
+                  <div class="stat-value text-secondary">{{ doubledNumber() }}</div>
                 </div>
               </div>
               <p class="text-xs opacity-50 font-mono text-center">computed(() => count() * 2)</p>
@@ -82,13 +82,14 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
               <ul class="text-sm opacity-70 space-y-1">
                 <li>Runs code when a signal changes</li>
                 <li>
-                  Good for:
+                  Best used for:
                   <span class="badge badge-ghost">logging </span>
                   <span class="badge badge-ghost">localStorage </span>
                   <span class="badge badge-ghost">analytics </span>
                 </li>
                 <li>Not for updating other signals</li>
                 <li>Cleans up automatically on destroy</li>
+                <li class="text-error font-semibold">Angular docs: "use effect() carefully"</li>
               </ul>
               <div class="bg-base-200 rounded-lg p-3 h-28 overflow-y-auto space-y-1">
                 @if (effectLog().length === 0) {
@@ -112,18 +113,22 @@ import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@a
 export class SignalPrimitivesDemoComponent {
   readonly countNumber = signal(0);
 
-  readonly doubled = computed(() => this.countNumber() * 2);
+  readonly doubledNumber = computed(() => {
+    return this.countNumber() * 2;
+  });
+
   readonly effectLog = signal<string[]>([]);
 
   private readonly effectExample = effect(() => {
     // reads count — tracked
-    const val = this.countNumber();
+    const count = this.countNumber();
 
     // writes effectLog — not tracked
-    this.effectLog.update((log) => [...log, `count changed → ${val}`]);
+    this.effectLog.update((log) => [...log, `count changed → ${count}`]);
   });
 
   increment() {
+    // this.countNumber.set(this.countNumber() + 1);
     this.countNumber.update((c) => c + 1);
   }
 

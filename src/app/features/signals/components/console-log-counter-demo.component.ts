@@ -1,21 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
 @Component({
-  selector: 'app-sync-counter-demo',
+  selector: 'app-console-log-counter-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="min-h-screen flex items-center justify-center">
       <div class="card">
-        <h2 class="card-title text-2xl mb-1">See It Yourself</h2>
-        <p class="text-sm opacity-60 mb-6">
-          This app runs <strong>Zoneless</strong>. Increment both counters and watch: only the
-          signal side updates — the zone counter stays frozen with nothing to trigger a rerender.
-        </p>
-
+        <h2 class="card-title text-2xl mb-6">Open Console and see the logs</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Zone side -->
           <div class="p-4 border rounded-lg bg-base-200">
-            <h3 class="text-xl font-bold mb-2">Zone Counter</h3>
+            <h3 class="card-subtitle font-bold mb-2">Zone Counter</h3>
             <div class="stats shadow w-full">
               <div class="stat">
                 <div class="stat-title">Counter</div>
@@ -28,7 +23,7 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 
           <!-- Signal side -->
           <div class="p-4 border-2 border-primary rounded-lg bg-base-200">
-            <h3 class="text-xl font-bold mb-2 text-primary">Signal Counter</h3>
+            <h3 class="card-subtitle font-bold mb-2 text-primary">Signal Counter</h3>
             <div class="stats shadow w-full">
               <div class="stat">
                 <div class="stat-title">Signal Count</div>
@@ -64,7 +59,7 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
     </section>
   `,
 })
-export class SyncCounterDemoComponent {
+export class ConsoleLogCounterDemoComponent {
   counter = 0;
   get doubleCounter() {
     console.log('Zone Check: Calculating doubleCounter');
@@ -80,6 +75,7 @@ export class SyncCounterDemoComponent {
   incrementZone() {
     this.counter++;
   }
+
   incrementSignal() {
     this.signalCounter.update((c) => c + 1);
   }
