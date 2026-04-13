@@ -1,0 +1,243 @@
+<div class="max-w-8xl mx-auto p-4 space-y-8">
+  <!-- Page header -->
+  <div>
+    <h1 class="text-3xl font-bold">Custom Store Features</h1>
+    <p class="text-lg opacity-70 mt-1">
+      <code>signalStoreFeature</code> lets you package reusable store behavior and drop it into any
+      store with one line.
+    </p>
+  </div>
+
+  <!-- Intro -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <p class="opacity-70">
+        Think of these like <strong>plugins for your store</strong>. You write them once, then add
+        them anywhere. Not built into SignalStore — but built the same way, so they compose
+        seamlessly.
+      </p>
+    </div>
+  </section>
+
+  <!-- withLogger -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-primary badge-lg">1</span>
+          <code class="text-primary">withLogger</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          Logs every state change to the console. One line to add to any store.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        A custom feature that uses <code>withHooks</code> and Angular's <code>effect()</code> to
+        watch the store's state and log it whenever it changes.
+      </p>
+
+      <button
+        class="btn btn-ghost btn-sm w-fit gap-2 text-primary"
+        (click)="withLoggerOpen.set(!withLoggerOpen())"
+        [attr.aria-expanded]="withLoggerOpen()"
+      >
+        {{ withLoggerOpen() ? '▼' : '▶' }} View code — withLogger
+      </button>
+      @if (withLoggerOpen()) {
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// Define the feature (once):</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">function</span> <span style="color:#89b4fa">withLogger</span>(<span style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>) &#123;
+  <span style="color:#cba6f7">return</span> <span style="color:#cba6f7">signalStoreFeature</span>(
+    <span style="color:#cba6f7">withHooks</span>(&#123;
+      <span style="color:#89b4fa">onInit</span>(store) &#123;
+        <span style="color:#cba6f7">effect</span>(() => &#123;
+          <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">state</span> = <span style="color:#cba6f7">getState</span>(store);
+          console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">`$&#123;name&#125; state changed`</span>, state);
+        &#125;);
+      &#125;,
+    &#125;),
+  );
+&#125;
+
+<span style="color:#6c7086">// Add to any store (one line):</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withLogger</span>(<span style="color:#a6e3a1">'[CART-STORE]'</span>),  <span style="color:#6c7086">// ← this is all you add</span>
+  <span style="color:#cba6f7">withState</span>(initialState),
+  <span style="color:#cba6f7">withComputed</span>(...),
+  <span style="color:#cba6f7">withMethods</span>(...),
+);</code></pre>
+      }
+
+      <div class="card bg-base-200 border border-base-300">
+        <div class="card-body py-4">
+          <p class="font-semibold text-sm mb-1">To see it in action:</p>
+          <p class="text-sm opacity-70">
+            Open <strong>DevTools → Console tab</strong> (press F12), then interact with the cart on
+            the SignalStore or Events pages. You'll see output like:
+          </p>
+          <pre
+            class="rounded p-3 text-xs mt-2 overflow-x-auto"
+            style="background: #1e1e2e; color: #a6e3a1"
+          ><code>[CART-STORE] state changed &#123; cartItems: [...] &#125;
+[DEMO-API-STORE] state changed &#123; requestLoading: true &#125;</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- withRequestStateAndErrorHandling -->
+  <section class="card bg-base-100 shadow-xl border-2 border-accent">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-accent badge-lg">2</span>
+          <code class="text-accent">withRequestStateAndErrorHandling</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          Tracking whether an HTTP request is loading, succeeded, or failed is boilerplate you write
+          in every project. This feature bundles it into one reusable piece.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        Returns a <code>handleRequest</code> operator — pipe any HTTP call through it. Uses
+        <code>rxMethod</code>
+        under the hood to handle async state automatically.
+      </p>
+
+      <button
+        class="btn btn-ghost btn-sm w-fit gap-2 text-accent"
+        (click)="withRequestStateOpen.set(!withRequestStateOpen())"
+        [attr.aria-expanded]="withRequestStateOpen()"
+      >
+        {{ withRequestStateOpen() ? '▼' : '▶' }} View code — withRequestStateAndErrorHandling
+      </button>
+      @if (withRequestStateOpen()) {
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// Add to any store that makes HTTP calls (one line):</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">DemoApiStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withRequestStateAndErrorHandling</span>(),  <span style="color:#6c7086">// ← adds loading/success/error state</span>
+  <span style="color:#cba6f7">withState</span>(&#123; <span style="color:#89b4fa">users</span>: [] &#125;),
+  <span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
+    <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span style="color:#cba6f7">void</span>&gt;(
+      <span style="color:#cba6f7">pipe</span>(
+        <span style="color:#cba6f7">tap</span>(() => store.<span style="color:#89b4fa">setLoading</span>()),
+        <span style="color:#cba6f7">switchMap</span>(() =>
+          http.<span style="color:#89b4fa">get</span>&lt;User[]&gt;(<span style="color:#a6e3a1">'/api/users'</span>).<span style="color:#89b4fa">pipe</span>(
+            store.<span style="color:#89b4fa">handleRequest</span>(&#123;
+              <span style="color:#89b4fa">next</span>: (users) => <span style="color:#cba6f7">patchState</span>(store, &#123; users &#125;),
+              <span style="color:#89b4fa">error</span>: (err) => console.<span style="color:#89b4fa">error</span>(err),
+            &#125;)
+          )
+        )
+      )
+    ),
+  &#125;)),
+);</code></pre>
+      }
+
+      <h3 class="font-semibold text-lg">Live Demo</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex flex-wrap gap-2">
+            <button
+              class="btn btn-primary"
+              [class.btn-disabled]="store.requestLoading()"
+              (click)="store.loadUsers()"
+            >
+              @if (store.requestLoading()) {
+                <span class="loading loading-spinner loading-sm"></span>
+              }
+              Load Users
+            </button>
+            <button
+              class="btn btn-error"
+              [class.btn-disabled]="store.requestLoading()"
+              (click)="store.simulateError()"
+            >
+              @if (store.requestLoading()) {
+                <span class="loading loading-spinner loading-sm"></span>
+              }
+              Simulate Error
+            </button>
+            <button class="btn btn-ghost" (click)="store.reset()">Reset</button>
+          </div>
+
+          <div class="flex items-center gap-3 p-4 bg-base-200 rounded-lg">
+            <span class="font-semibold text-sm">Status:</span>
+            @if (store.requestLoading()) {
+              <span class="badge badge-warning gap-1">
+                <span class="loading loading-spinner loading-xs"></span>
+                loading
+              </span>
+            } @else if (store.requestSuccess() === true) {
+              <span class="badge badge-success">success</span>
+            } @else if (store.requestSuccess() === false) {
+              <span class="badge badge-error">error</span>
+            } @else {
+              <span class="badge badge-ghost">idle</span>
+            }
+          </div>
+
+          @if (store.requestSuccess() === false && store.requestError()) {
+            <div role="alert" class="alert alert-error">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{{ store.requestError() }}</span>
+            </div>
+          }
+        </div>
+
+        <div>
+          @if (store.users().length > 0) {
+            <div class="overflow-x-auto">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Company</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of store.users(); track user.id) {
+                    <tr>
+                      <td>{{ user.name }}</td>
+                      <td class="text-sm opacity-70">{{ user.email }}</td>
+                      <td class="text-sm">{{ user.company.name }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else if (store.requestSuccess() === undefined && !store.requestLoading()) {
+            <div class="flex items-center justify-center h-32 opacity-50">
+              Click "Load Users" to fetch from JSONPlaceholder API
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="alert bg-base-200 border border-base-300">
+        <span
+          >💡 <strong>Key insight:</strong> One line to add to any store that makes HTTP calls.
+          Loading, success, and error state — all handled.</span
+        >
+      </div>
+    </div>
+  </section>
+</div>
