@@ -1,30 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { SignalPrimitivesDemoComponent } from './components/signal-primitives-demo.component';
+import { ConsoleLogCounterDemoComponent } from './components/console-log-counter-demo.component';
+import { AsyncCounterDemoComponent } from './components/async-counter-demo.component';
 
 @Component({
   selector: 'app-signals-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  imports: [
+    SignalPrimitivesDemoComponent,
+    ConsoleLogCounterDemoComponent,
+    AsyncCounterDemoComponent,
+  ],
   templateUrl: './signals.component.html',
 })
-export class SignalsDemoComponent {
-  counter = 0;
-  get doubleCounter() {
-    console.log('Zone Check: Calculating doubleCounter');
-    return this.counter * 2;
-  }
-
-  signalCounter = signal(0);
-
-  signalDoubleCounter = computed(() => {
-    console.log('Signal Check: Calculating signalDoubleCounter');
-    return this.signalCounter() * 2;
-  });
-
-  incrementZone() {
-    this.counter++;
-  }
-
-  incrementSignal() {
-    this.signalCounter.update((c) => c + 1);
-  }
-}
+export class SignalsDemoComponent {}

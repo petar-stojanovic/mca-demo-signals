@@ -1,0 +1,257 @@
+<div class="max-w-8xl mx-auto p-4 space-y-8">
+  <!-- Page header -->
+  <div>
+    <h1 class="text-3xl font-bold">Events</h1>
+    <p class="text-lg opacity-70 mt-1">
+      Think of events like announcements. Any part of the app can hear them — without knowing who
+      else is listening.
+    </p>
+  </div>
+
+  <!-- How it works -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-6">
+      <h2 class="card-title text-2xl">How it works</h2>
+
+      <img
+        src="app-architecture-with-events-plugin.png"
+        alt=""
+        class="rounded-lg w-full max-w-4xl mx-auto"
+      />
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-primary mb-1">Event</p>
+          <p class="text-xs opacity-70">
+            Describes an occurrence within the system. Events are dispatched to trigger state
+            changes and/or side effects.
+          </p>
+        </div>
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-warning mb-1">Dispatcher</p>
+          <p class="text-xs opacity-70">
+            An event bus that forwards events to their corresponding handlers in the stores.
+          </p>
+        </div>
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-secondary mb-1">Store</p>
+          <p class="text-xs opacity-70">
+            Contains event handlers that manage state transitions and handle side effects,
+            maintaining a clean and predictable application flow.
+          </p>
+        </div>
+        <div class="p-3 bg-base-200 rounded-lg">
+          <p class="font-semibold text-sm text-accent mb-1">View</p>
+          <p class="text-xs opacity-70">
+            Reflects state changes and dispatches new events, enabling continuous interaction
+            between the user interface and the underlying system.
+          </p>
+        </div>
+      </div>
+
+      <!-- Concept pills with descriptions and code toggles -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="border border-primary/30 bg-primary/5 rounded-lg p-3">
+          <div class="flex gap-1 mb-2">
+            <div class="badge badge-primary badge-outline"><code>event</code></div>
+            <div class="badge badge-primary badge-outline"><code>eventGroup</code></div>
+          </div>
+          <p class="text-sm opacity-70">
+            Two ways to define events. Use <code>event()</code> for standalone events,
+            <code>eventGroup()</code> to share a source prefix across many events.
+          </p>
+          <button
+            class="btn btn-ghost btn-xs mt-2 gap-1 text-primary"
+            (click)="eventGroupOpen.set(!eventGroupOpen())"
+            [attr.aria-expanded]="eventGroupOpen()"
+          >
+            {{ eventGroupOpen() ? '▼' : '▶' }} View code
+          </button>
+          @if (eventGroupOpen()) {
+            <pre
+              class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+              style="background: #1e1e2e; color: #cdd6f4"
+            ><code><span style="color:#6c7086">// Standalone — one event at a time:</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">queryChanged</span> = <span
+                style="color:#cba6f7">event</span>(
+  <span style="color:#a6e3a1">'[Book Search Page] Query Changed'</span>,
+  <span style="color:#cba6f7">type</span>&lt;<span style="color:#cba6f7">string</span>&gt;()
+);
+
+<span style="color:#6c7086">// Grouped — source prefix added automatically:</span>
+<span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">cartEvents</span> = <span
+                style="color:#cba6f7">eventGroup</span>(&#123;
+  <span style="color:#89b4fa">source</span>: <span style="color:#a6e3a1">'Cart'</span>,
+  <span style="color:#89b4fa">events</span>: &#123;
+    <span style="color:#89b4fa">itemAdded</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
+                style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>; <span
+                style="color:#89b4fa">price</span>: <span style="color:#cba6f7">number</span> &#125;&gt;(),
+    <span style="color:#89b4fa">itemRemoved</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
+                style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span> &#125;&gt;(),
+  &#125;,
+&#125;);</code></pre>
+          }
+        </div>
+
+        <div class="border border-secondary/30 bg-secondary/5 rounded-lg p-3">
+          <div class="badge badge-secondary badge-outline mb-2"><code>withReducer</code></div>
+          <p class="text-sm opacity-70">
+            Listens to events and updates the store's state in response.
+          </p>
+          <button
+            class="btn btn-ghost btn-xs mt-2 gap-1 text-secondary"
+            (click)="withReducerOpen.set(!withReducerOpen())"
+            [attr.aria-expanded]="withReducerOpen()"
+          >
+            {{ withReducerOpen() ? '▼' : '▶' }} View code
+          </button>
+          @if (withReducerOpen()) {
+            <pre
+              class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+              style="background: #1e1e2e; color: #cdd6f4"
+            ><code><span style="color:#cba6f7">withReducer</span>(
+  <span style="color:#cba6f7">on</span>(cartEvents.<span style="color:#89b4fa">itemAdded</span>, (&#123; <span
+                style="color:#89b4fa">payload</span> &#125;, state) => (&#123;
+    <span style="color:#89b4fa">notifications</span>: [
+      ...state.<span style="color:#89b4fa">notifications</span>,
+      &#123;
+        <span style="color:#89b4fa">id</span>: state.<span style="color:#89b4fa">nextId</span>,
+        <span style="color:#89b4fa">message</span>: <span
+                style="color:#a6e3a1">`Added "$&#123;payload.name&#125;"`</span>,
+        <span style="color:#89b4fa">timestamp</span>: <span style="color:#cba6f7">new</span> Date().<span
+                style="color:#89b4fa">toLocaleTimeString</span>(),
+      &#125;,
+    ],
+    <span style="color:#89b4fa">nextId</span>: state.<span style="color:#89b4fa">nextId</span> + <span
+                style="color:#fab387">1</span>,
+  &#125;)),
+)</code></pre>
+          }
+        </div>
+
+        <div class="border border-accent/30 bg-accent/5 rounded-lg p-3">
+          <div class="badge badge-accent badge-outline mb-2"><code>injectDispatch</code></div>
+          <p class="text-sm opacity-70">
+            Fires events from a component or store. Anything listening will react.
+          </p>
+          <button
+            class="btn btn-ghost btn-xs mt-2 gap-1 text-accent"
+            (click)="injectDispatchOpen.set(!injectDispatchOpen())"
+            [attr.aria-expanded]="injectDispatchOpen()"
+          >
+            {{ injectDispatchOpen() ? '▼' : '▶' }} View code
+          </button>
+          @if (injectDispatchOpen()) {
+            <pre
+              class="rounded p-3 text-xs mt-2 overflow-x-auto leading-relaxed"
+              style="background: #1e1e2e; color: #cdd6f4"
+            ><code><span style="color:#6c7086">// From a component:</span>
+<span style="color:#cba6f7">private</span> <span style="color:#cba6f7">readonly</span> <span style="color:#89b4fa">dispatch</span> = <span
+                style="color:#cba6f7">injectDispatch</span>(cartEvents);
+
+<span style="color:#89b4fa">toggleItem</span>(item: CartItem) &#123;
+  <span style="color:#cba6f7">if</span> (item.<span style="color:#89b4fa">inCart</span>) &#123;
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemRemoved</span>(&#123; <span
+                style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span> &#125;);
+  &#125; <span style="color:#cba6f7">else</span> &#123;
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">dispatch</span>.<span style="color:#89b4fa">itemAdded</span>(&#123; <span
+                style="color:#89b4fa">name</span>: item.<span style="color:#89b4fa">name</span>, <span
+                style="color:#89b4fa">price</span>: item.<span style="color:#89b4fa">price</span> &#125;);
+  &#125;
+&#125;
+</code></pre>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live demo -->
+  <section class="card bg-base-100 shadow-xl border-2 border-info">
+    <div class="card-body space-y-6">
+      <div>
+        <h2 class="card-title text-2xl">Live Demo</h2>
+        <p class="opacity-70 mt-1">
+          Toggle items below. Watch both stores react to the same events — independently.
+        </p>
+      </div>
+
+      <h3 class="font-semibold">Products</h3>
+      <ul class="space-y-2">
+        @for (item of cartStore.cartItems(); track item.id) {
+          <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
+            <div>
+              <span>{{ item.name }}</span>
+              <span class="text-sm opacity-60 ml-2">{{ item.price | currency }}</span>
+            </div>
+            <button
+              class="btn btn-sm"
+              [class.btn-accent]="!item.inCart"
+              [class.btn-error]="item.inCart"
+              (click)="toggleItem(item)"
+            >
+              {{ item.inCart ? 'Remove' : 'Add' }}
+            </button>
+          </li>
+        }
+      </ul>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="p-4 bg-base-200 rounded-lg">
+          <h3 class="font-bold mb-1 flex items-center gap-2">
+            <span class="badge badge-primary">CartStore</span>
+          </h3>
+          <p class="text-xs opacity-60 mb-3">
+            Reacts via <code>withMethods</code> — updates item list and total
+          </p>
+          @if (cartStore.cartOnlyItems().length === 0) {
+            <p class="text-sm opacity-50">No items in cart yet.</p>
+          } @else {
+            <ul class="space-y-1 mb-2">
+              @for (item of cartStore.cartOnlyItems(); track item.id) {
+                <li class="text-sm p-2 bg-base-100 rounded flex justify-between">
+                  <span>{{ item.name }}</span>
+                  <span>{{ item.price | currency }}</span>
+                </li>
+              }
+            </ul>
+            <p class="font-semibold text-sm">Total: {{ cartStore.cartTotal() | currency }}</p>
+          }
+        </div>
+
+        <div class="p-4 bg-base-200 rounded-lg">
+          <h3 class="font-bold mb-1 flex items-center gap-2">
+            <span class="badge badge-secondary">NotificationStore</span>
+          </h3>
+          <p class="text-xs opacity-60 mb-3">
+            Reacts via <code>withReducer</code> — logs every event independently
+          </p>
+          @if (notificationStore.notifications().length === 0) {
+            <p class="text-sm opacity-50">No events fired yet.</p>
+          } @else {
+            <ul class="space-y-1 max-h-48 overflow-y-auto">
+              @for (n of notificationStore.notifications(); track n.id) {
+                <li class="text-sm p-2 bg-base-100 rounded flex justify-between">
+                  <span>{{ n.message }}</span>
+                  <span class="opacity-50 text-xs">{{ n.timestamp }}</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key insight -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <div class="alert bg-base-200 border border-base-300">
+        <span
+          >💡 <strong>Key insight:</strong> Neither store knows about the other. They only share the
+          event definition. Add a third store tomorrow — zero changes to existing code.</span
+        >
+      </div>
+    </div>
+  </section>
+</div>

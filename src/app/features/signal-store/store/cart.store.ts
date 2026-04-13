@@ -1,3 +1,4 @@
+// src/app/features/signal-store/cart.store.ts
 import { computed } from '@angular/core';
 import {
   patchState,
@@ -33,10 +34,9 @@ export const initialState: AppState = {
 export const CartStore = signalStore(
   { providedIn: 'root' },
   withDevtools('[CART-STORE]'),
-  // withLogger('[CART-STORE]'),
   withState(initialState),
   withComputed(({ cartItems }) => ({
-    cartItems: computed(() => cartItems().filter((item) => item.inCart)),
+    cartOnlyItems: computed(() => cartItems().filter((item) => item.inCart)),
     cartTotal: computed(() =>
       cartItems()
         .filter((item) => item.inCart)
@@ -45,11 +45,11 @@ export const CartStore = signalStore(
   })),
   withMethods((store) => ({
     toggleInCart(itemId: number) {
-      patchState(store, {
-        cartItems: store
-          .cartItems()
-          .map((item) => (item.id === itemId ? { ...item, inCart: !item.inCart } : item)),
-      });
+      patchState(store, (state) => ({
+        cartItems: state.cartItems.map((item) =>
+          item.id === itemId ? { ...item, inCart: !item.inCart } : item,
+        ),
+      }));
     },
   })),
   withHooks({

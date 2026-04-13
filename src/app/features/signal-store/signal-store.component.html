@@ -1,0 +1,302 @@
+<div class="max-w-8xl mx-auto p-4 space-y-8">
+  <!-- Page header -->
+  <div>
+    <h1 class="text-3xl font-bold">NgRx SignalStore</h1>
+    <p class="text-lg opacity-70 mt-1">
+      One file replaces four. State management built on Angular Signals.
+    </p>
+  </div>
+
+  <!-- Why SignalStore -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-2xl">Why SignalStore?</h2>
+      <p class="opacity-70 mb-4">
+        Classic NgRx is powerful but requires a lot of ceremony. SignalStore replaces all of that
+        with a single, functional API built on Angular Signals.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 bg-error/10 border border-error/30 rounded-lg">
+          <div class="badge badge-error badge-outline mb-3">Classic NgRx — 4 files</div>
+          <ul class="text-sm space-y-1 opacity-70">
+            <li>actions.ts</li>
+            <li>reducer.ts</li>
+            <li>selectors.ts</li>
+            <li>effects.ts</li>
+          </ul>
+        </div>
+        <div class="p-4 bg-success/10 border border-success/30 rounded-lg">
+          <div class="badge badge-success badge-outline mb-3">SignalStore — 1 file</div>
+          <ul class="text-sm space-y-1 opacity-70">
+            <li>withState — define state</li>
+            <li>withComputed — derive values</li>
+            <li>withMethods — update state</li>
+            <li>withHooks — lifecycle</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- withState -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-primary badge-lg">1</span>
+          <code class="text-primary">withState</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          Define what your app needs to remember. Every property becomes a live signal
+          automatically.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        You describe the shape of your data once. SignalStore turns each property into a signal — a
+        reactive value that updates the UI whenever it changes. No boilerplate, no decorators.
+      </p>
+
+      <button
+        class="btn btn-ghost btn-sm w-fit gap-2 text-primary"
+        (click)="withStateOpen.set(!withStateOpen())"
+        [attr.aria-expanded]="withStateOpen()"
+      >
+        {{ withStateOpen() ? '▼' : '▶' }} View code — withState
+      </button>
+      @if (withStateOpen()) {
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  <span style="color:#cba6f7">withState</span>(&#123;
+    <span style="color:#89b4fa">cartItems</span>: [
+      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">1</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Wireless Headphones'</span>, <span style="color:#89b4fa">price</span>: <span style="color:#fab387">59.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
+      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">2</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Mechanical Keyboard'</span>,  <span style="color:#89b4fa">price</span>: <span style="color:#fab387">89.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
+      <span style="color:#6c7086">// ...</span>
+    ]
+  &#125;),
+  <span style="color:#6c7086">// cartItems is now a signal: store.cartItems()</span>
+);</code></pre>
+      }
+
+      <h3 class="font-semibold">Live: All Products</h3>
+      <ul class="space-y-2">
+        @for (item of store.cartItems(); track item.id) {
+          <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
+            <span>{{ item.name }}</span>
+            <span class="badge badge-outline">{{ item.price | currency }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- withComputed -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-secondary badge-lg">2</span>
+          <code class="text-secondary">withComputed</code>
+        </h2>
+        <p class="opacity-70 mt-1">Derived values that stay in sync — no manual recalculation.</p>
+      </div>
+      <p class="text-sm opacity-60">
+        Computed values are calculated from existing state. When the source changes, computed values
+        update automatically. Add items to the cart in Section 3 to see them update here.
+      </p>
+
+      <button
+        class="btn btn-ghost btn-sm w-fit gap-2 text-secondary"
+        (click)="withComputedOpen.set(!withComputedOpen())"
+        [attr.aria-expanded]="withComputedOpen()"
+      >
+        {{ withComputedOpen() ? '▼' : '▶' }} View code — withComputed
+      </button>
+      @if (withComputedOpen()) {
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#cba6f7">withComputed</span>((&#123; <span style="color:#89b4fa">cartItems</span> &#125;) => (&#123;
+  <span style="color:#89b4fa">cartOnlyItems</span>: <span style="color:#cba6f7">computed</span>(() => <span style="color:#89b4fa">cartItems</span>().<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)),
+  <span style="color:#89b4fa">cartTotal</span>: <span style="color:#cba6f7">computed</span>(() =>
+    <span style="color:#89b4fa">cartItems</span>()
+      .<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)
+      .<span style="color:#89b4fa">reduce</span>((sum, item) => sum + item.<span style="color:#89b4fa">price</span>, <span style="color:#fab387">0</span>)
+  ),
+&#125;))</code></pre>
+      }
+
+      @if (store.cartOnlyItems().length === 0) {
+        <div class="alert">
+          <span>Cart is empty. Add items in Section 3 below.</span>
+        </div>
+      } @else {
+        <div class="stats shadow w-full">
+          <div class="stat">
+            <div class="stat-title">Items in Cart</div>
+            <div class="stat-value text-secondary">{{ store.cartOnlyItems().length }}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Total</div>
+            <div class="stat-value text-secondary">{{ store.cartTotal() | currency }}</div>
+          </div>
+        </div>
+        <ul class="mt-2 space-y-1">
+          @for (item of store.cartOnlyItems(); track item.id) {
+            <li class="flex justify-between p-2 bg-base-200 rounded">
+              <span>{{ item.name }}</span>
+              <span>{{ item.price | currency }}</span>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="alert bg-base-200 border border-base-300">
+        <span
+          >💡 <strong>Key insight:</strong> These update automatically when the source signal
+          changes. No subscriptions, no manual triggers.</span
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- withMethods -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-accent badge-lg">3</span>
+          <code class="text-accent">withMethods</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          All state changes go through one place. Components just call methods.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        Methods are the only way to update state. The template calls a method, the store handles the
+        rest. Watch Sections 1 and 2 update reactively as you interact below.
+      </p>
+
+      <button
+        class="btn btn-ghost btn-sm w-fit gap-2 text-accent"
+        (click)="withMethodsOpen.set(!withMethodsOpen())"
+        [attr.aria-expanded]="withMethodsOpen()"
+      >
+        {{ withMethodsOpen() ? '▼' : '▶' }} View code — withMethods
+      </button>
+      @if (withMethodsOpen()) {
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#cba6f7">withMethods</span>((store) => (&#123;
+  <span style="color:#89b4fa">toggleInCart</span>(itemId: <span style="color:#cba6f7">number</span>) &#123;
+    <span style="color:#cba6f7">patchState</span>(store, (state) => (&#123;
+      <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span style="color:#89b4fa">map</span>((item) =>
+        item.<span style="color:#89b4fa">id</span> === itemId ? &#123; ...item, <span style="color:#89b4fa">inCart</span>: !item.<span style="color:#89b4fa">inCart</span> &#125; : item
+      ),
+    &#125;));
+  &#125;,
+&#125;))</code></pre>
+      }
+
+      <ul class="space-y-2">
+        @for (item of store.cartItems(); track item.id) {
+          <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
+            <div>
+              <span>{{ item.name }}</span>
+              <span class="text-sm opacity-60 ml-2">{{ item.price | currency }}</span>
+            </div>
+            <button
+              class="btn btn-sm"
+              [class.btn-accent]="!item.inCart"
+              [class.btn-error]="item.inCart"
+              (click)="toggleItem(item)"
+            >
+              {{ item.inCart ? 'Remove' : 'Add to Cart' }}
+            </button>
+          </li>
+        }
+      </ul>
+
+      <div class="alert bg-base-200 border border-base-300">
+        <span
+          >💡 <strong>Key insight:</strong> Sections 1 and 2 above update reactively when you click.
+          The component doesn't manage any state itself.</span
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- rxMethod -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-info badge-lg">4</span>
+          <code class="text-info">rxMethod</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          A bridge between RxJS streams and your store — accepts a value, a signal, or an
+          observable, and cleans up automatically.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        When you need to handle async operations like HTTP calls, <code>rxMethod</code> connects an
+        RxJS pipeline to your store without manual subscription management.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <span class="badge badge-info badge-outline p-3">No <code>.subscribe()</code></span>
+        <span class="badge badge-info badge-outline p-3">Reactive by default</span>
+        <span class="badge badge-info badge-outline p-3">Auto-cleanup on destroy</span>
+      </div>
+
+      <button
+        class="btn btn-ghost btn-sm w-fit gap-2 text-info"
+        (click)="rxMethodOpen.set(!rxMethodOpen())"
+        [attr.aria-expanded]="rxMethodOpen()"
+      >
+        {{ rxMethodOpen() ? '▼' : '▶' }} View code — rxMethod
+      </button>
+      @if (rxMethodOpen()) {
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
+  <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span style="color:#cba6f7">void</span>&gt;(
+    <span style="color:#cba6f7">pipe</span>(
+      <span style="color:#cba6f7">tap</span>(() => store.<span style="color:#89b4fa">setLoading</span>()),
+      <span style="color:#cba6f7">switchMap</span>(() =>
+        http.<span style="color:#89b4fa">get</span>&lt;User[]&gt;(<span style="color:#a6e3a1">'/api/users'</span>).<span style="color:#89b4fa">pipe</span>(
+          store.<span style="color:#89b4fa">handleRequest</span>(&#123;
+            <span style="color:#89b4fa">next</span>: (users) => <span style="color:#cba6f7">patchState</span>(store, &#123; users &#125;),
+            <span style="color:#89b4fa">error</span>: (err) => console.<span style="color:#89b4fa">error</span>(err),
+          &#125;)
+        )
+      )
+    )
+  ),
+&#125;))</code></pre>
+      }
+
+      <div class="alert alert-info">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>You will see <code>rxMethod</code> in action on the Custom Features page.</span>
+      </div>
+    </div>
+  </section>
+</div>
