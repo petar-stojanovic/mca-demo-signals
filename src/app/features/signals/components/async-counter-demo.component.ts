@@ -10,7 +10,7 @@ import {
   selector: 'app-async-counter-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="min-h-[calc(100vh-10rem)] flex items-center justify-center mb-12">
+    <section class="min-h-screen flex items-center justify-center">
       <div class="card w-full">
         <h2 class="card-title text-2xl mb-1">Async Updates</h2>
         <p class="text-sm opacity-60 mb-6">
@@ -69,11 +69,15 @@ export class AsyncCounterDemoComponent {
   updateTraditional() {
     setTimeout(() => {
       this.traditionalValue++;
+
+      console.log('Traditional Value Updated: ', this.traditionalValue);
     }, 1000);
   }
   updateSignal() {
     setTimeout(() => {
       this.signalValue.update((v) => v + 1);
+
+      console.log('Signal Value Updated: ', this.signalValue());
     }, 1000);
   }
   forceCheck() {
