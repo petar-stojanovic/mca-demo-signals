@@ -94,7 +94,10 @@
         </div>
 
         <div class="border border-secondary/30 bg-secondary/5 rounded-lg p-3">
-          <div class="badge badge-secondary badge-outline mb-2"><code>withReducer</code></div>
+          <div class="flex gap-1 mb-2">
+            <div class="badge badge-secondary badge-outline"><code>withReducer</code></div>
+            <div class="badge badge-secondary badge-outline"><code>withEventHandlers</code></div>
+          </div>
           <p class="text-sm opacity-70">
             Listens to events and updates the store's state in response.
           </p>
@@ -125,6 +128,20 @@
     <span style="color:#89b4fa">nextId</span>: state.<span style="color:#89b4fa">nextId</span> + <span
                 style="color:#fab387">1</span>,
   &#125;)),
+)
+
+<span style="color:#6c7086">// or</span>
+
+<span style="color:#cba6f7">withEventHandlers</span>((store, events = <span style="color:#cba6f7">inject</span>(Events)) => (&#123;
+  <span style="color:#89b4fa">logCartActivity$</span>: events
+    .<span style="color:#89b4fa">on</span>(cartEvents.itemAdded)
+    .<span
+              style="color:#89b4fa">pipe</span>(
+      <span style="color:#cba6f7">tap</span>((&#123; type, payload &#125;) =>
+        console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">`[Cart] $&#123;type&#125;`</span>, payload)
+      )
+   ),
+  &#125;)
 )</code></pre>
           }
         </div>

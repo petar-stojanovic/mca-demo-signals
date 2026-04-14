@@ -9,6 +9,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { withDevtools } from '@angular-architects/ngrx-toolkit';
+import { withLogger } from './signal-store-features';
 
 export type CartItem = {
   id: number;
@@ -37,6 +38,7 @@ export const CartStore = signalStore(
   { providedIn: 'root' },
   withDevtools('[CART-STORE]'),
   withState(initialState),
+  withLogger('[CART-STORE]'),
   withComputed(({ cartItems, searchQuery }) => ({
     cartOnlyItems: computed(() => cartItems().filter((item) => item.inCart)),
     cartTotal: computed(() =>

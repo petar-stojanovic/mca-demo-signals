@@ -214,33 +214,33 @@
       <div class="overflow-x-auto">
         <table class="table table-zebra w-full text-sm">
           <thead>
-          <tr>
-            <th>Classic NgRx file</th>
-            <th>Purpose</th>
-            <th>SignalStore equivalent</th>
-          </tr>
+            <tr>
+              <th>Classic NgRx file</th>
+              <th>Purpose</th>
+              <th>SignalStore equivalent</th>
+            </tr>
           </thead>
           <tbody>
-          <tr>
-            <td><code>actions.ts</code></td>
-            <td class="opacity-70">Name every user intent</td>
-            <td><code>withMethods</code></td>
-          </tr>
-          <tr>
-            <td><code>reducer.ts</code></td>
-            <td class="opacity-70">Define state + apply changes</td>
-            <td><code>withState</code> + <code>withMethods</code></td>
-          </tr>
-          <tr>
-            <td><code>selectors.ts</code></td>
-            <td class="opacity-70">Derive computed values</td>
-            <td><code>withComputed</code></td>
-          </tr>
-          <tr>
-            <td><code>effects.ts</code></td>
-            <td class="opacity-70">Async ops + side effects</td>
-            <td><code>rxMethod</code> or <code>effect</code></td>
-          </tr>
+            <tr>
+              <td><code>actions.ts</code></td>
+              <td class="opacity-70">Name every user intent</td>
+              <td><code>withMethods</code></td>
+            </tr>
+            <tr>
+              <td><code>reducer.ts</code></td>
+              <td class="opacity-70">Define state + apply changes</td>
+              <td><code>withState</code> + <code>withMethods</code></td>
+            </tr>
+            <tr>
+              <td><code>selectors.ts</code></td>
+              <td class="opacity-70">Derive computed values</td>
+              <td><code>withComputed</code></td>
+            </tr>
+            <tr>
+              <td><code>effects.ts</code></td>
+              <td class="opacity-70">Async ops + side effects</td>
+              <td><code>rxMethod</code> or <code>effect</code></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -541,6 +541,9 @@
         ><code><span style="color:#6c7086">// effects.ts — an entirely separate class just for async operations</span>
 <span style="color:#cba6f7">&#64;Injectable</span>()
 <span style="color:#cba6f7">export class</span> <span style="color:#89b4fa">CartEffects</span> &#123;
+  <span style="color:#cba6f7">private</span> <span style="color:#89b4fa">actions$</span> = <span style="color:#cba6f7">inject</span>(Actions);
+  <span style="color:#cba6f7">private</span> <span style="color:#89b4fa">http</span> = <span style="color:#cba6f7">inject</span>(HttpClient);
+
   <span style="color:#89b4fa">loadProducts$</span> = <span style="color:#cba6f7">createEffect</span>(() =>
     <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">actions$</span>.<span
             style="color:#89b4fa">pipe</span>(
@@ -560,8 +563,8 @@
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
           style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
-  <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span
-            style="color:#cba6f7">userId: number</span>&gt;(
+  <span style="color:#89b4fa">loadUser</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span
+            style="color:#89b4fa">userId: </span><span style="color:#fab387">number</span>&gt;(
     <span style="color:#cba6f7">pipe</span>(
       <span style="color:#cba6f7">tap</span>(() => store.<span style="color:#89b4fa">setLoading</span>()),
       <span style="color:#cba6f7">switchMap</span>(() =>
@@ -593,138 +596,6 @@
         </svg>
         <span>You will see <code>rxMethod</code> in action on the Custom Features page.</span>
       </div>
-    </div>
-  </section>
-
-  <!-- 5. withHooks -->
-  <section class="card bg-base-100 shadow-xl">
-    <div class="card-body space-y-4">
-      <div>
-        <h2 class="card-title text-2xl">
-          <span class="badge badge-warning badge-lg">5</span>
-          <code class="text-warning">withHooks</code>
-        </h2>
-        <p class="opacity-70 mt-1">
-          Lifecycle callbacks for the store — run code when the store is created or destroyed.
-        </p>
-      </div>
-      <p class="text-sm opacity-60">
-        Use <code>onInit</code> to trigger initial data loads or set up reactive effects. Use
-        <code>onDestroy</code> for cleanup. The store is the right place for this — not the
-        component.
-      </p>
-
-      <details class="rounded-lg border border-base-300">
-        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
-          NgRx - constructor in <code>effects.ts</code>
-        </summary>
-        <pre
-          class="p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background: #1e1e2e; color: #cdd6f4"
-        ><code><span style="color:#6c7086">// effects.ts — lifecycle logic lived in the constructor</span>
-<span style="color:#cba6f7">&#64;Injectable</span>()
-<span style="color:#cba6f7">export class</span> <span style="color:#89b4fa">CartEffects</span> &#123;
-  <span style="color:#cba6f7">constructor</span>(<span style="color:#cba6f7">private</span> actions$: Actions) &#123;
-    <span style="color:#6c7086">// initialization logic here — hard to test in isolation</span>
-  &#125;
-&#125;</code></pre>
-      </details>
-
-      <details class="rounded-lg border border-base-300">
-        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
-          SignalStore - <code>withHooks</code>
-        </summary>
-        <pre
-          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background: #1e1e2e; color: #cdd6f4"
-        ><code><span style="color:#cba6f7">withHooks</span>(&#123;
-  <span style="color:#89b4fa">onInit</span>(store) &#123;
-    <span style="color:#6c7086">// called once when the store is first injected</span>
-    console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'Store initialized'</span>, store);
-
-    <span style="color:#6c7086">// can call methods, set up effects, trigger loads...</span>
-    <span style="color:#cba6f7">effect</span>(() => &#123;
-      <span style="color:#cba6f7">const</span> state = <span style="color:#cba6f7">getState</span>(store);
-      console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'State changed'</span>, state);
-    &#125;);
-  &#125;,
-  <span style="color:#89b4fa">onDestroy</span>(store) &#123;
-    <span style="color:#6c7086">// called when the store is garbage collected</span>
-    console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'Store destroyed'</span>, store);
-  &#125;,
-&#125;)</code></pre>
-      </details>
-    </div>
-  </section>
-
-  <!-- 6. withEventHandlers -->
-  <section class="card bg-base-100 shadow-xl">
-    <div class="card-body space-y-4">
-      <div>
-        <h2 class="card-title text-2xl">
-          <span class="badge badge-neutral badge-lg">6</span>
-          <code>withEventHandlers</code>
-        </h2>
-        <p class="opacity-70 mt-1">
-          React to store events with side effects — without coupling the method that fires the event
-          to the code that handles it.
-        </p>
-      </div>
-      <p class="text-sm opacity-60">
-        Use <code>withEventHandlers</code> when you need side effects in response to events
-        (logging, analytics, notifications). Use <code>withReducer</code> when you need state
-        transitions. See the Events page for a live demo of both.
-      </p>
-
-      <details class="rounded-lg border border-base-300">
-        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
-          NgRx — <code>effects.ts</code> listening to an action
-        </summary>
-        <pre
-          class="p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background: #1e1e2e; color: #cdd6f4"
-        ><code><span style="color:#6c7086">// effects.ts — listen to an action and trigger a side effect</span>
-<span style="color:#89b4fa">logToggle$</span> = <span style="color:#cba6f7">createEffect</span>(() =>
-  <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">actions$</span>.<span
-            style="color:#89b4fa">pipe</span>(
-    <span style="color:#cba6f7">ofType</span>(toggleInCart),
-    <span style="color:#cba6f7">tap</span>((&#123; itemId &#125;) => console.<span
-            style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'Item toggled:'</span>, itemId))
-  ),
-  &#123; dispatch: <span style="color:#fab387">false</span> &#125;
-);</code></pre>
-      </details>
-
-      <details class="rounded-lg border border-base-300">
-        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
-          SignalStore - <code>withEventHandlers</code>
-        </summary>
-        <pre
-          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
-          style="background: #1e1e2e; color: #cdd6f4"
-        ><code><span style="color:#6c7086">// cart.events.ts — define typed events</span>
-<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">cartEvents</span> = <span
-            style="color:#cba6f7">eventGroup</span>(&#123;
-  source: <span style="color:#a6e3a1">'Cart'</span>,
-  events: &#123;
-    <span style="color:#89b4fa">itemAdded</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
-            style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>; <span style="color:#89b4fa">price</span>: <span
-            style="color:#cba6f7">number</span> &#125;&gt;(),
-    <span style="color:#89b4fa">itemRemoved</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
-            style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span> &#125;&gt;(),
-  &#125;,
-&#125;);
-
-<span style="color:#6c7086">// Inside signalStore(...) — react to events with Observable side effects</span>
-<span style="color:#cba6f7">withEventHandlers</span>((store, events = <span style="color:#cba6f7">inject</span>(Events)) => (&#123;
-  <span style="color:#89b4fa">logCartActivity$</span>: events.<span style="color:#89b4fa">on</span>(cartEvents.itemAdded, cartEvents.itemRemoved).<span
-            style="color:#89b4fa">pipe</span>(
-    <span style="color:#cba6f7">tap</span>((&#123; type, payload &#125;) =>
-      console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">`[Cart] $&#123;type&#125;`</span>, payload)
-    )
-  ),
-&#125;))</code></pre>
-      </details>
     </div>
   </section>
 </div>
