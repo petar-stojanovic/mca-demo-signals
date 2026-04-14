@@ -33,14 +33,20 @@ export const withRequestStateAndErrorHandling = () => {
           return pipe(
             tapResponse({
               next: (response: T) => {
+                patchState(store, { ...requestStateSuccess() });
                 config.next(response);
-                patchState(store, { ...requestStateSuccess(), requestLoading: false });
               },
               error: (error: HttpErrorResponse) => {
-                patchState(store, { ...requestStateError(error.error), requestLoading: false });
+                patchState(store, { ...requestStateError(error.error) });
+
                 config.error(error);
               },
-              finalize: config.finalize,
+              finalize: () => {
+                if (config.finalize) {
+                  config.finalize();
+                }
+                patchState(store, { requestLoading: false });
+              },
             }),
           );
         },
