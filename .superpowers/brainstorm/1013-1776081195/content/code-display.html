@@ -1,0 +1,78 @@
+<h2>Should the pages show actual NgRx code?</h2>
+<p class="subtitle">Consider your audience — do they need to see the syntax to understand it, or does the live demo tell the story?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Code + Demo (full story)</h3>
+      <p>Each section shows a syntax-highlighted snippet of the actual NgRx code, then the live demo below. Audience sees exactly what produces the result.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">withComputed — Derived values</div>
+        <div class="mockup-body" style="font-size:12px">
+          <div style="color:#6b7280;margin-bottom:8px">Derived values. Always in sync. Recalculate only when the source changes.</div>
+          <div style="background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:14px;font-family:monospace;font-size:11px;line-height:1.8;margin-bottom:10px">
+            <span style="color:#cba6f7">withComputed</span>(({ cartItems }) => ({<br>
+            &nbsp;&nbsp;<span style="color:#89b4fa">cartTotal</span>: <span style="color:#cba6f7">computed</span>(() =><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;cartItems().<span style="color:#89b4fa">filter</span>(i => i.inCart)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.<span style="color:#89b4fa">reduce</span>((sum, i) => sum + i.price, <span style="color:#fab387">0</span>)<br>
+            &nbsp;&nbsp;)<br>
+            }))
+          </div>
+          <div style="background:#f0fdf4;border-radius:6px;padding:10px;border-left:3px solid #22c55e;font-size:11px">
+            <strong>Live:</strong> Items in Cart: <strong>2</strong> &nbsp;|&nbsp; Total: <strong>$149.98</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Demo-only (show, don't tell)</h3>
+      <p>No code shown on screen. Just explanation text and the live interactive demo. Keeps focus on behavior, not syntax. Cleaner for non-developers.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">withComputed — Derived values</div>
+        <div class="mockup-body" style="font-size:12px">
+          <div style="color:#6b7280;margin-bottom:10px">Derived values automatically stay in sync. They recalculate only when the source signal changes — no manual updates needed.</div>
+          <div style="background:#eff1f5;border-radius:8px;padding:12px">
+            <div style="display:flex;gap:16px">
+              <div style="background:#fff;border-radius:6px;padding:10px;flex:1;text-align:center">
+                <div style="font-size:10px;color:#888">Items in Cart</div>
+                <div style="font-size:22px;font-weight:bold;color:#db2777">2</div>
+              </div>
+              <div style="background:#fff;border-radius:6px;padding:10px;flex:1;text-align:center">
+                <div style="font-size:10px;color:#888">Total</div>
+                <div style="font-size:22px;font-weight:bold;color:#db2777">$149.98</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Collapsible code (optional depth)</h3>
+      <p>Code is hidden behind an expandable "View Code" toggle. Curious attendees can open it; everyone else stays focused on the demo.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">withComputed — Derived values</div>
+        <div class="mockup-body" style="font-size:12px">
+          <div style="color:#6b7280;margin-bottom:10px">Derived values automatically stay in sync.</div>
+          <div style="background:#eff1f5;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px">
+            <div style="display:flex;gap:12px">
+              <div style="background:#fff;border-radius:4px;padding:8px;flex:1;text-align:center"><div style="font-size:9px;color:#888">Items</div><div style="font-weight:bold;color:#db2777">2</div></div>
+              <div style="background:#fff;border-radius:4px;padding:8px;flex:1;text-align:center"><div style="font-size:9px;color:#888">Total</div><div style="font-weight:bold;color:#db2777">$149.98</div></div>
+            </div>
+          </div>
+          <div style="border:1px dashed #cbd5e1;border-radius:6px;padding:8px;cursor:pointer;font-size:10px;color:#64748b;display:flex;align-items:center;gap:6px">
+            <span>▶</span> View code — withComputed
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

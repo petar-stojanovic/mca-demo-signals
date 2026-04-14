@@ -7,38 +7,247 @@
     </p>
   </div>
 
-  <!-- Why SignalStore -->
+  <!-- Why SignalStore? -->
   <section class="card bg-base-100 shadow-xl">
-    <div class="card-body">
+    <div class="card-body space-y-6">
       <h2 class="card-title text-2xl">Why SignalStore?</h2>
-      <p class="opacity-70 mb-4">
-        Classic NgRx is powerful but requires a lot of ceremony. SignalStore replaces all of that
-        with a single, functional API built on Angular Signals.
+      <p class="opacity-70">
+        Classic NgRx is a proven pattern for large-scale Angular apps. But it has a cost: every
+        feature requires four files working in concert. SignalStore replaces all of that with a
+        single, functional API built on Angular Signals.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-4 bg-error/10 border border-error/30 rounded-lg">
-          <div class="badge badge-error badge-outline mb-3">Classic NgRx — 4 files</div>
-          <ul class="text-sm space-y-1 opacity-70">
-            <li>actions.ts</li>
-            <li>reducer.ts</li>
-            <li>selectors.ts</li>
-            <li>effects.ts</li>
-          </ul>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Classic NgRx column -->
+        <div class="space-y-3">
+          <div class="badge badge-error badge-outline badge-lg">Classic NgRx — 4 files</div>
+
+          <!-- actions.ts -->
+          <div class="border border-error/30 rounded-lg overflow-hidden">
+            <details class="w-full flex flex-col justify-between bg-error/10 text-left">
+              <summary class="cursor-pointer p-3 text-sm font-mono select-none">actions.ts</summary>
+              <pre
+                class="p-4 text-sm overflow-x-auto leading-relaxed"
+                style="background: #1e1e2e; color: #cdd6f4"
+              ><code><span style="color:#6c7086">// Name every user intent as a typed action object</span>
+<span style="color:#cba6f7">import</span> &#123; createAction, props &#125; <span
+                  style="color:#cba6f7">from</span> <span style="color:#a6e3a1">'&#64;ngrx/store'</span>;
+
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">toggleInCart</span> = <span
+                  style="color:#cba6f7">createAction</span>(
+  <span style="color:#a6e3a1">'[Cart] Toggle Item'</span>,
+  <span style="color:#cba6f7">props</span>&lt;&#123; <span style="color:#89b4fa">itemId</span>: <span
+                  style="color:#cba6f7">number</span> &#125;&gt;()
+);</code></pre>
+            </details>
+          </div>
+
+          <!-- reducer.ts -->
+          <div class="border border-error/30 rounded-lg overflow-hidden">
+            <details class="w-full flex flex-col justify-between bg-error/10 text-left">
+              <summary class="cursor-pointer p-3 text-sm font-mono select-none">reducer.ts</summary>
+
+              <pre
+                class="p-4 text-sm overflow-x-auto leading-relaxed"
+                style="background: #1e1e2e; color: #cdd6f4"
+              ><code><span style="color:#6c7086">// Define state shape + how each action changes it</span>
+<span style="color:#cba6f7">import</span> &#123; createReducer, on &#125; <span style="color:#cba6f7">from</span> <span
+                  style="color:#a6e3a1">'&#64;ngrx/store'</span>;
+<span style="color:#cba6f7">import</span> &#123; toggleInCart &#125; <span style="color:#cba6f7">from</span> <span
+                  style="color:#a6e3a1">'./cart.actions'</span>;
+
+<span style="color:#cba6f7">export interface</span> <span style="color:#89b4fa">CartState</span> &#123; <span
+                  style="color:#89b4fa">cartItems</span>: <span style="color:#89b4fa">CartItem</span>[] &#125;
+
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">initialState</span>: <span
+                  style="color:#89b4fa">CartState</span> = &#123;
+  <span style="color:#89b4fa">cartItems</span>: [&#123; <span style="color:#89b4fa">id</span>: <span
+                  style="color:#fab387">1</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Wireless Headphones'</span>, ... &#125;],
+&#125;;
+
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">cartReducer</span> = <span
+                  style="color:#cba6f7">createReducer</span>(
+  initialState,
+  <span style="color:#cba6f7">on</span>(toggleInCart, (state, &#123; itemId &#125;) => (&#123;
+    ...state,
+    <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span
+                  style="color:#89b4fa">map</span>(item =>
+      item.<span style="color:#89b4fa">id</span> === itemId
+        ? &#123; ...item, <span style="color:#89b4fa">inCart</span>: !item.<span style="color:#89b4fa">inCart</span> &#125;
+        : item
+    ),
+  &#125;))
+);</code></pre>
+            </details>
+          </div>
+
+          <!-- selectors.ts -->
+          <div class="border border-error/30 rounded-lg overflow-hidden">
+            <details class="w-full flex flex-col justify-between bg-error/10 text-left">
+              <summary class="cursor-pointer p-3 text-sm font-mono select-none">
+                selectors.ts
+              </summary>
+              <pre
+                class="p-4 text-sm overflow-x-auto leading-relaxed"
+                style="background: #1e1e2e; color: #cdd6f4"
+              ><code><span style="color:#6c7086">// Derive values from state — memoized, composable</span>
+<span style="color:#cba6f7">import</span> &#123; createFeatureSelector, createSelector &#125; <span
+                  style="color:#cba6f7">from</span> <span style="color:#a6e3a1">'&#64;ngrx/store'</span>;
+
+<span style="color:#cba6f7">const</span> <span style="color:#89b4fa">selectCart</span> = <span style="color:#cba6f7">createFeatureSelector</span>&lt;<span
+                  style="color:#89b4fa">CartState</span>&gt;(<span style="color:#a6e3a1">'cart'</span>);
+<span style="color:#cba6f7">const</span> <span style="color:#89b4fa">selectItems</span> = <span style="color:#cba6f7">createSelector</span>(selectCart, s => s.<span
+                  style="color:#89b4fa">cartItems</span>);
+
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">selectCartOnlyItems</span> = <span
+                  style="color:#cba6f7">createSelector</span>(
+  selectItems, items => items.<span style="color:#89b4fa">filter</span>(i => i.<span style="color:#89b4fa">inCart</span>)
+);
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">selectCartTotal</span> = <span
+                  style="color:#cba6f7">createSelector</span>(
+  selectCartOnlyItems,
+  items => items.<span style="color:#89b4fa">reduce</span>((sum, i) => sum + i.<span style="color:#89b4fa">price</span>, <span
+                  style="color:#fab387">0</span>)
+);</code></pre>
+            </details>
+          </div>
+
+          <!-- effects.ts -->
+          <div class="border border-error/30 rounded-lg overflow-hidden">
+            <details class="w-full flex flex-col justify-between bg-error/10 text-left">
+              <summary class="cursor-pointer p-3 text-sm font-mono select-none">effects.ts</summary>
+              <pre
+                class="p-4 text-sm overflow-x-auto leading-relaxed"
+                style="background: #1e1e2e; color: #cdd6f4"
+              ><code><span
+                style="color:#6c7086">// Async operations and side effects — separate class, separate file</span>
+<span style="color:#cba6f7">import</span> &#123; inject, Injectable &#125; <span style="color:#cba6f7">from</span> <span
+                  style="color:#a6e3a1">'&#64;angular/core'</span>;
+<span style="color:#cba6f7">import</span> &#123; Actions, createEffect, ofType &#125; <span
+                  style="color:#cba6f7">from</span> <span style="color:#a6e3a1">'&#64;ngrx/effects'</span>;
+
+<span style="color:#cba6f7">&#64;Injectable</span>()
+<span style="color:#cba6f7">export class</span> <span style="color:#89b4fa">CartEffects</span> &#123;
+  <span style="color:#cba6f7">private</span> <span style="color:#89b4fa">actions$</span> = <span style="color:#cba6f7">inject</span>(Actions);
+  <span style="color:#cba6f7">private</span> <span style="color:#89b4fa">http</span> = <span style="color:#cba6f7">inject</span>(HttpClient);
+
+  <span style="color:#89b4fa">loadProducts$</span> = <span style="color:#cba6f7">createEffect</span>(() =>
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">actions$</span>.<span
+                  style="color:#89b4fa">pipe</span>(
+      <span style="color:#cba6f7">ofType</span>(loadProducts),
+      <span style="color:#cba6f7">switchMap</span>(() =>
+        <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">http</span>.<span
+                  style="color:#89b4fa">get</span>&lt;<span style="color:#89b4fa">CartItem</span>[]&gt;(<span
+                  style="color:#a6e3a1">'/api/products'</span>).<span style="color:#89b4fa">pipe</span>(
+          <span style="color:#cba6f7">map</span>(products => <span style="color:#cba6f7">loadProductsSuccess</span>(&#123; products &#125;))
+        )
+      )
+    )
+  );
+&#125;</code></pre>
+            </details>
+          </div>
         </div>
-        <div class="p-4 bg-success/10 border border-success/30 rounded-lg">
-          <div class="badge badge-success badge-outline mb-3">SignalStore — 1 file</div>
-          <ul class="text-sm space-y-1 opacity-70">
-            <li>withState — define state</li>
-            <li>withComputed — derive values</li>
-            <li>withMethods — update state</li>
-            <li>withHooks — lifecycle</li>
-          </ul>
+
+        <!-- SignalStore column -->
+        <div class="space-y-3">
+          <div class="badge badge-success badge-outline badge-lg">SignalStore — 1 file</div>
+
+          <div class="border border-success/30 rounded-lg overflow-hidden">
+            <details class="w-full flex flex-col justify-between bg-success/10 text-left">
+              <summary class="cursor-pointer p-3 text-sm font-mono select-none">
+                cart.store.ts
+              </summary>
+
+              <pre
+                class="p-4 text-sm overflow-x-auto leading-relaxed"
+                style="background: #1e1e2e; color: #cdd6f4"
+              ><code><span style="color:#cba6f7">export const</span> <span
+                style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
+  &#123; providedIn: <span style="color:#a6e3a1">'root'</span> &#125;,
+
+  <span style="color:#6c7086">// replaces: initialState in reducer.ts</span>
+  <span style="color:#cba6f7">withState</span>(&#123;
+    <span style="color:#89b4fa">cartItems</span>: [&#123; <span style="color:#89b4fa">id</span>: <span
+                  style="color:#fab387">1</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Wireless Headphones'</span>, ... &#125;],
+  &#125;),
+
+  <span style="color:#6c7086">// replaces: selectors.ts</span>
+  <span style="color:#cba6f7">withComputed</span>((&#123; cartItems &#125;) => (&#123;
+    <span style="color:#89b4fa">cartOnlyItems</span>: <span
+                  style="color:#cba6f7">computed</span>(() => cartItems().<span style="color:#89b4fa">filter</span>(i => i.<span
+                  style="color:#89b4fa">inCart</span>)),
+    <span style="color:#89b4fa">cartTotal</span>: <span style="color:#cba6f7">computed</span>(() =>
+      cartItems().<span style="color:#89b4fa">filter</span>(i => i.<span style="color:#89b4fa">inCart</span>)
+        .<span style="color:#89b4fa">reduce</span>((sum, i) => sum + i.<span style="color:#89b4fa">price</span>, <span
+                  style="color:#fab387">0</span>)
+    ),
+  &#125;)),
+
+  <span style="color:#6c7086">// replaces: actions.ts + reducer.ts on() handler</span>
+  <span style="color:#cba6f7">withMethods</span>((store) => (&#123;
+    <span style="color:#89b4fa">toggleInCart</span>(itemId: <span style="color:#cba6f7">number</span>) &#123;
+      <span style="color:#cba6f7">patchState</span>(store, state => (&#123;
+        <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span
+                  style="color:#89b4fa">map</span>(item =>
+          item.<span style="color:#89b4fa">id</span> === itemId
+            ? &#123; ...item, <span style="color:#89b4fa">inCart</span>: !item.<span style="color:#89b4fa">inCart</span> &#125; : item
+        ),
+      &#125;));
+    &#125;,
+  &#125;)),
+
+  <span style="color:#6c7086">// replaces: effects.ts lifecycle + withEventHandlers for side effects</span>
+  <span style="color:#cba6f7">withHooks</span>(&#123;
+    <span style="color:#89b4fa">onInit</span>: (store) => console.<span style="color:#89b4fa">log</span>(<span
+                  style="color:#a6e3a1">'Store ready'</span>, store),
+    <span style="color:#89b4fa">onDestroy</span>: (store) => console.<span style="color:#89b4fa">log</span>(<span
+                  style="color:#a6e3a1">'Cleanup'</span>, store),
+  &#125;),
+);</code></pre>
+            </details>
+          </div>
         </div>
+      </div>
+
+      <!-- Mapping table -->
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full text-sm">
+          <thead>
+          <tr>
+            <th>Classic NgRx file</th>
+            <th>Purpose</th>
+            <th>SignalStore equivalent</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><code>actions.ts</code></td>
+            <td class="opacity-70">Name every user intent</td>
+            <td><code>withMethods</code></td>
+          </tr>
+          <tr>
+            <td><code>reducer.ts</code></td>
+            <td class="opacity-70">Define state + apply changes</td>
+            <td><code>withState</code> + <code>withMethods</code></td>
+          </tr>
+          <tr>
+            <td><code>selectors.ts</code></td>
+            <td class="opacity-70">Derive computed values</td>
+            <td><code>withComputed</code></td>
+          </tr>
+          <tr>
+            <td><code>effects.ts</code></td>
+            <td class="opacity-70">Async ops + side effects</td>
+            <td><code>rxMethod</code> or <code>effect</code></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <!-- withState -->
+  <!-- 1. withState -->
   <section class="card bg-base-100 shadow-xl">
     <div class="card-body space-y-4">
       <div>
@@ -56,28 +265,45 @@
         reactive value that updates the UI whenever it changes. No boilerplate, no decorators.
       </p>
 
-      <button
-        class="btn btn-ghost btn-sm w-fit gap-2 text-primary"
-        (click)="withStateOpen.set(!withStateOpen())"
-        [attr.aria-expanded]="withStateOpen()"
-      >
-        {{ withStateOpen() ? '▼' : '▶' }} View code — withState
-      </button>
-      @if (withStateOpen()) {
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx — <code>reducer.ts</code> initial state
+        </summary>
+        <pre
+          class="p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// reducer.ts — state shape lived here, mixed with mutation logic</span>
+<span style="color:#cba6f7">export interface</span> <span style="color:#89b4fa">CartState</span> &#123; <span
+            style="color:#89b4fa">cartItems</span>: <span style="color:#89b4fa">CartItem</span>[] &#125;
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">initialState</span>: <span
+            style="color:#89b4fa">CartState</span> = &#123; <span style="color:#89b4fa">cartItems</span>: [] &#125;;
+<span
+  style="color:#6c7086">// To read in a component: inject Store, then store.select(selectCartItems)</span></code></pre>
+      </details>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          SignalStore — withState
+        </summary>
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
           style="background: #1e1e2e; color: #cdd6f4"
-        ><code><span style="color:#cba6f7">export</span> <span style="color:#cba6f7">const</span> <span style="color:#89b4fa">CartStore</span> = <span style="color:#cba6f7">signalStore</span>(
+        ><code><span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">CartStore</span> = <span
+          style="color:#cba6f7">signalStore</span>(
   <span style="color:#cba6f7">withState</span>(&#123;
     <span style="color:#89b4fa">cartItems</span>: [
-      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">1</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Wireless Headphones'</span>, <span style="color:#89b4fa">price</span>: <span style="color:#fab387">59.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
-      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">2</span>, <span style="color:#89b4fa">name</span>: <span style="color:#a6e3a1">'Mechanical Keyboard'</span>,  <span style="color:#89b4fa">price</span>: <span style="color:#fab387">89.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
+      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">1</span>, <span style="color:#89b4fa">name</span>: <span
+            style="color:#a6e3a1">'Wireless Headphones'</span>, <span style="color:#89b4fa">price</span>: <span
+            style="color:#fab387">59.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
+      &#123; <span style="color:#89b4fa">id</span>: <span style="color:#fab387">2</span>, <span style="color:#89b4fa">name</span>: <span
+            style="color:#a6e3a1">'Mechanical Keyboard'</span>,  <span style="color:#89b4fa">price</span>: <span
+            style="color:#fab387">89.99</span>, <span style="color:#89b4fa">inCart</span>: <span style="color:#fab387">false</span> &#125;,
       <span style="color:#6c7086">// ...</span>
-    ]
+    ],
   &#125;),
   <span style="color:#6c7086">// cartItems is now a signal: store.cartItems()</span>
 );</code></pre>
-      }
+      </details>
 
       <h3 class="font-semibold">Live: All Products</h3>
       <ul class="space-y-2">
@@ -91,7 +317,7 @@
     </div>
   </section>
 
-  <!-- withComputed -->
+  <!-- 2. withComputed -->
   <section class="card bg-base-100 shadow-xl">
     <div class="card-body space-y-4">
       <div>
@@ -103,29 +329,55 @@
       </div>
       <p class="text-sm opacity-60">
         Computed values are calculated from existing state. When the source changes, computed values
-        update automatically. Add items to the cart in Section 3 to see them update here.
+        update automatically. Add items to the cart or search in Section 3 to see them update here.
       </p>
 
-      <button
-        class="btn btn-ghost btn-sm w-fit gap-2 text-secondary"
-        (click)="withComputedOpen.set(!withComputedOpen())"
-        [attr.aria-expanded]="withComputedOpen()"
-      >
-        {{ withComputedOpen() ? '▼' : '▶' }} View code — withComputed
-      </button>
-      @if (withComputedOpen()) {
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx — <code>selectors.ts</code>
+        </summary>
+        <pre
+          class="p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// selectors.ts — composable, memoized, but verbose</span>
+<span style="color:#cba6f7">const</span> <span style="color:#89b4fa">selectCart</span> = <span style="color:#cba6f7">createFeatureSelector</span>&lt;<span
+            style="color:#89b4fa">CartState</span>&gt;(<span style="color:#a6e3a1">'cart'</span>);
+<span style="color:#cba6f7">const</span> <span style="color:#89b4fa">selectItems</span> = <span style="color:#cba6f7">createSelector</span>(selectCart, s => s.<span
+            style="color:#89b4fa">cartItems</span>);
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">selectCartTotal</span> = <span
+            style="color:#cba6f7">createSelector</span>(
+  selectItems,
+  items => items.<span style="color:#89b4fa">filter</span>(i => i.<span style="color:#89b4fa">inCart</span>).<span
+            style="color:#89b4fa">reduce</span>((sum, i) => sum + i.<span style="color:#89b4fa">price</span>, <span
+            style="color:#fab387">0</span>)
+);</code></pre>
+      </details>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          SignalStore — <code>withComputed</code>
+        </summary>
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
           style="background: #1e1e2e; color: #cdd6f4"
-        ><code><span style="color:#cba6f7">withComputed</span>((&#123; <span style="color:#89b4fa">cartItems</span> &#125;) => (&#123;
-  <span style="color:#89b4fa">cartOnlyItems</span>: <span style="color:#cba6f7">computed</span>(() => <span style="color:#89b4fa">cartItems</span>().<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)),
+        ><code><span style="color:#cba6f7">withComputed</span>((&#123; <span
+          style="color:#89b4fa">cartItems</span>, <span style="color:#89b4fa">searchQuery</span> &#125;) => (&#123;
+  <span style="color:#89b4fa">cartOnlyItems</span>: <span style="color:#cba6f7">computed</span>(() => cartItems().<span
+            style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)),
   <span style="color:#89b4fa">cartTotal</span>: <span style="color:#cba6f7">computed</span>(() =>
-    <span style="color:#89b4fa">cartItems</span>()
-      .<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)
-      .<span style="color:#89b4fa">reduce</span>((sum, item) => sum + item.<span style="color:#89b4fa">price</span>, <span style="color:#fab387">0</span>)
+    cartItems().<span style="color:#89b4fa">filter</span>(item => item.<span style="color:#89b4fa">inCart</span>)
+      .<span style="color:#89b4fa">reduce</span>((sum, item) => sum + item.<span
+            style="color:#89b4fa">price</span>, <span style="color:#fab387">0</span>)
+  ),
+  <span style="color:#6c7086">// reacts to TWO signals at once — searchQuery AND cartItems</span>
+  <span style="color:#89b4fa">filteredItems</span>: <span style="color:#cba6f7">computed</span>(() =>
+    cartItems().<span style="color:#89b4fa">filter</span>(item =>
+      item.<span style="color:#89b4fa">name</span>.<span style="color:#89b4fa">toLowerCase</span>().<span
+            style="color:#89b4fa">includes</span>(searchQuery().<span style="color:#89b4fa">toLowerCase</span>())
+    )
   ),
 &#125;))</code></pre>
-      }
+      </details>
 
       @if (store.cartOnlyItems().length === 0) {
         <div class="alert">
@@ -151,17 +403,10 @@
           }
         </ul>
       }
-
-      <div class="alert bg-base-200 border border-base-300">
-        <span
-          >💡 <strong>Key insight:</strong> These update automatically when the source signal
-          changes. No subscriptions, no manual triggers.</span
-        >
-      </div>
     </div>
   </section>
 
-  <!-- withMethods -->
+  <!-- 3. withMethods -->
   <section class="card bg-base-100 shadow-xl">
     <div class="card-body space-y-4">
       <div>
@@ -174,34 +419,73 @@
         </p>
       </div>
       <p class="text-sm opacity-60">
-        Methods are the only way to update state. The template calls a method, the store handles the
-        rest. Watch Sections 1 and 2 update reactively as you interact below.
+        Methods are the only way to update state. Try searching and toggling items — watch Sections
+        1 and 2 update reactively.
       </p>
 
-      <button
-        class="btn btn-ghost btn-sm w-fit gap-2 text-accent"
-        (click)="withMethodsOpen.set(!withMethodsOpen())"
-        [attr.aria-expanded]="withMethodsOpen()"
-      >
-        {{ withMethodsOpen() ? '▼' : '▶' }} View code — withMethods
-      </button>
-      @if (withMethodsOpen()) {
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx - <code>actions.ts</code> + <code>reducer.ts</code>
+        </summary>
+        <pre
+          class="p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// Component dispatches an action...</span>
+<span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">store</span>.<span
+            style="color:#89b4fa">dispatch</span>(<span style="color:#cba6f7">toggleInCart</span>(&#123; itemId &#125;));
+
+<span style="color:#6c7086">// ...NgRx routes it to the matching on() handler in reducer.ts</span>
+<span style="color:#cba6f7">on</span>(toggleInCart, (state, &#123; itemId &#125;) => (&#123;
+  ...state,
+  <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span
+            style="color:#89b4fa">map</span>(item =>
+    item.<span style="color:#89b4fa">id</span> === itemId ? &#123; ...item, <span style="color:#89b4fa">inCart</span>: !item.<span
+            style="color:#89b4fa">inCart</span> &#125; : item
+  ),
+&#125;))</code></pre>
+      </details>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx - <code>withMethods</code>
+        </summary>
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
           style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">withMethods</span>((store) => (&#123;
   <span style="color:#89b4fa">toggleInCart</span>(itemId: <span style="color:#cba6f7">number</span>) &#123;
     <span style="color:#cba6f7">patchState</span>(store, (state) => (&#123;
-      <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span style="color:#89b4fa">map</span>((item) =>
-        item.<span style="color:#89b4fa">id</span> === itemId ? &#123; ...item, <span style="color:#89b4fa">inCart</span>: !item.<span style="color:#89b4fa">inCart</span> &#125; : item
+      <span style="color:#89b4fa">cartItems</span>: state.<span style="color:#89b4fa">cartItems</span>.<span
+            style="color:#89b4fa">map</span>((item) =>
+        item.<span style="color:#89b4fa">id</span> === itemId ? &#123; ...item, <span
+            style="color:#89b4fa">inCart</span>: !item.<span style="color:#89b4fa">inCart</span> &#125; : item
       ),
     &#125;));
   &#125;,
+  <span style="color:#89b4fa">setSearchQuery</span>(query: <span style="color:#cba6f7">string</span>) &#123;
+    <span style="color:#cba6f7">patchState</span>(store, &#123; searchQuery: query &#125;);
+  &#125;,
 &#125;))</code></pre>
-      }
+      </details>
+
+      <!-- Search input -->
+      <div class="form-control">
+        <label class="label" for="product-search">
+          <span class="label-text font-semibold">Search products</span>
+        </label>
+        <input
+          id="product-search"
+          type="search"
+          class="input input-bordered w-full"
+          placeholder="Type to filter…"
+          [value]="store.searchQuery()"
+          (input)="onSearch($event)"
+          aria-label="Search products"
+        />
+      </div>
 
       <ul class="space-y-2">
-        @for (item of store.cartItems(); track item.id) {
+        @for (item of store.filteredItems(); track item.id) {
           <li class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
             <div>
               <span>{{ item.name }}</span>
@@ -217,18 +501,14 @@
             </button>
           </li>
         }
+        @if (store.filteredItems().length === 0) {
+          <li class="p-3 text-center opacity-60">No products match "{{ store.searchQuery() }}"</li>
+        }
       </ul>
-
-      <div class="alert bg-base-200 border border-base-300">
-        <span
-          >💡 <strong>Key insight:</strong> Sections 1 and 2 above update reactively when you click.
-          The component doesn't manage any state itself.</span
-        >
-      </div>
     </div>
   </section>
 
-  <!-- rxMethod -->
+  <!-- 4. rxMethod -->
   <section class="card bg-base-100 shadow-xl">
     <div class="card-body space-y-4">
       <div>
@@ -251,33 +531,49 @@
         <span class="badge badge-info badge-outline p-3">Auto-cleanup on destroy</span>
       </div>
 
-      <button
-        class="btn btn-ghost btn-sm w-fit gap-2 text-info"
-        (click)="rxMethodOpen.set(!rxMethodOpen())"
-        [attr.aria-expanded]="rxMethodOpen()"
-      >
-        {{ rxMethodOpen() ? '▼' : '▶' }} View code — rxMethod
-      </button>
-      @if (rxMethodOpen()) {
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx - <code>effects.ts</code>
+        </summary>
+        <pre
+          class="p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// effects.ts — an entirely separate class just for async operations</span>
+<span style="color:#cba6f7">&#64;Injectable</span>()
+<span style="color:#cba6f7">export class</span> <span style="color:#89b4fa">CartEffects</span> &#123;
+  <span style="color:#89b4fa">loadProducts$</span> = <span style="color:#cba6f7">createEffect</span>(() =>
+    <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">actions$</span>.<span
+            style="color:#89b4fa">pipe</span>(
+      <span style="color:#cba6f7">ofType</span>(loadProducts),
+      <span style="color:#cba6f7">switchMap</span>(() => <span style="color:#cba6f7">this</span>.<span
+            style="color:#89b4fa">http</span>.<span style="color:#89b4fa">get</span>(<span style="color:#a6e3a1">'/api/products'</span>))
+    )
+  );
+&#125;</code></pre>
+      </details>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          SignalStore - <code>rxMethod</code>
+        </summary>
         <pre
           class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
           style="background: #1e1e2e; color: #cdd6f4"
         ><code><span style="color:#cba6f7">withMethods</span>((store, http = <span style="color:#cba6f7">inject</span>(HttpClient)) => (&#123;
-  <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span style="color:#cba6f7">void</span>&gt;(
+  <span style="color:#89b4fa">loadUsers</span>: <span style="color:#cba6f7">rxMethod</span>&lt;<span
+            style="color:#cba6f7">userId: number</span>&gt;(
     <span style="color:#cba6f7">pipe</span>(
       <span style="color:#cba6f7">tap</span>(() => store.<span style="color:#89b4fa">setLoading</span>()),
       <span style="color:#cba6f7">switchMap</span>(() =>
-        http.<span style="color:#89b4fa">get</span>&lt;User[]&gt;(<span style="color:#a6e3a1">'/api/users'</span>).<span style="color:#89b4fa">pipe</span>(
-          store.<span style="color:#89b4fa">handleRequest</span>(&#123;
-            <span style="color:#89b4fa">next</span>: (users) => <span style="color:#cba6f7">patchState</span>(store, &#123; users &#125;),
-            <span style="color:#89b4fa">error</span>: (err) => console.<span style="color:#89b4fa">error</span>(err),
-          &#125;)
+        http.<span style="color:#89b4fa">get</span>&lt;User[]&gt;(<span style="color:#a6e3a1">'/api/users'</span>).<span
+            style="color:#89b4fa">pipe</span>(
+          ...
         )
       )
     )
   ),
 &#125;))</code></pre>
-      }
+      </details>
 
       <div class="alert alert-info">
         <svg
@@ -297,6 +593,138 @@
         </svg>
         <span>You will see <code>rxMethod</code> in action on the Custom Features page.</span>
       </div>
+    </div>
+  </section>
+
+  <!-- 5. withHooks -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-warning badge-lg">5</span>
+          <code class="text-warning">withHooks</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          Lifecycle callbacks for the store — run code when the store is created or destroyed.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        Use <code>onInit</code> to trigger initial data loads or set up reactive effects. Use
+        <code>onDestroy</code> for cleanup. The store is the right place for this — not the
+        component.
+      </p>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx - constructor in <code>effects.ts</code>
+        </summary>
+        <pre
+          class="p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// effects.ts — lifecycle logic lived in the constructor</span>
+<span style="color:#cba6f7">&#64;Injectable</span>()
+<span style="color:#cba6f7">export class</span> <span style="color:#89b4fa">CartEffects</span> &#123;
+  <span style="color:#cba6f7">constructor</span>(<span style="color:#cba6f7">private</span> actions$: Actions) &#123;
+    <span style="color:#6c7086">// initialization logic here — hard to test in isolation</span>
+  &#125;
+&#125;</code></pre>
+      </details>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          SignalStore - <code>withHooks</code>
+        </summary>
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#cba6f7">withHooks</span>(&#123;
+  <span style="color:#89b4fa">onInit</span>(store) &#123;
+    <span style="color:#6c7086">// called once when the store is first injected</span>
+    console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'Store initialized'</span>, store);
+
+    <span style="color:#6c7086">// can call methods, set up effects, trigger loads...</span>
+    <span style="color:#cba6f7">effect</span>(() => &#123;
+      <span style="color:#cba6f7">const</span> state = <span style="color:#cba6f7">getState</span>(store);
+      console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'State changed'</span>, state);
+    &#125;);
+  &#125;,
+  <span style="color:#89b4fa">onDestroy</span>(store) &#123;
+    <span style="color:#6c7086">// called when the store is garbage collected</span>
+    console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'Store destroyed'</span>, store);
+  &#125;,
+&#125;)</code></pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- 6. withEventHandlers -->
+  <section class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <div>
+        <h2 class="card-title text-2xl">
+          <span class="badge badge-neutral badge-lg">6</span>
+          <code>withEventHandlers</code>
+        </h2>
+        <p class="opacity-70 mt-1">
+          React to store events with side effects — without coupling the method that fires the event
+          to the code that handles it.
+        </p>
+      </div>
+      <p class="text-sm opacity-60">
+        Use <code>withEventHandlers</code> when you need side effects in response to events
+        (logging, analytics, notifications). Use <code>withReducer</code> when you need state
+        transitions. See the Events page for a live demo of both.
+      </p>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          NgRx — <code>effects.ts</code> listening to an action
+        </summary>
+        <pre
+          class="p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// effects.ts — listen to an action and trigger a side effect</span>
+<span style="color:#89b4fa">logToggle$</span> = <span style="color:#cba6f7">createEffect</span>(() =>
+  <span style="color:#cba6f7">this</span>.<span style="color:#89b4fa">actions$</span>.<span
+            style="color:#89b4fa">pipe</span>(
+    <span style="color:#cba6f7">ofType</span>(toggleInCart),
+    <span style="color:#cba6f7">tap</span>((&#123; itemId &#125;) => console.<span
+            style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">'Item toggled:'</span>, itemId))
+  ),
+  &#123; dispatch: <span style="color:#fab387">false</span> &#125;
+);</code></pre>
+      </details>
+
+      <details class="rounded-lg border border-base-300">
+        <summary class="cursor-pointer p-3 text-sm font-mono opacity-60 select-none">
+          SignalStore - <code>withEventHandlers</code>
+        </summary>
+        <pre
+          class="rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"
+          style="background: #1e1e2e; color: #cdd6f4"
+        ><code><span style="color:#6c7086">// cart.events.ts — define typed events</span>
+<span style="color:#cba6f7">export const</span> <span style="color:#89b4fa">cartEvents</span> = <span
+            style="color:#cba6f7">eventGroup</span>(&#123;
+  source: <span style="color:#a6e3a1">'Cart'</span>,
+  events: &#123;
+    <span style="color:#89b4fa">itemAdded</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
+            style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span>; <span style="color:#89b4fa">price</span>: <span
+            style="color:#cba6f7">number</span> &#125;&gt;(),
+    <span style="color:#89b4fa">itemRemoved</span>: <span style="color:#cba6f7">type</span>&lt;&#123; <span
+            style="color:#89b4fa">name</span>: <span style="color:#cba6f7">string</span> &#125;&gt;(),
+  &#125;,
+&#125;);
+
+<span style="color:#6c7086">// Inside signalStore(...) — react to events with Observable side effects</span>
+<span style="color:#cba6f7">withEventHandlers</span>((store, events = <span style="color:#cba6f7">inject</span>(Events)) => (&#123;
+  <span style="color:#89b4fa">logCartActivity$</span>: events.<span style="color:#89b4fa">on</span>(cartEvents.itemAdded, cartEvents.itemRemoved).<span
+            style="color:#89b4fa">pipe</span>(
+    <span style="color:#cba6f7">tap</span>((&#123; type, payload &#125;) =>
+      console.<span style="color:#89b4fa">log</span>(<span style="color:#a6e3a1">`[Cart] $&#123;type&#125;`</span>, payload)
+    )
+  ),
+&#125;))</code></pre>
+      </details>
     </div>
   </section>
 </div>

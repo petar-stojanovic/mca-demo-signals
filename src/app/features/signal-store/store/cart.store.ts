@@ -19,6 +19,7 @@ export type CartItem = {
 
 export type AppState = {
   cartItems: CartItem[];
+  searchQuery: string;
 };
 
 export const initialState: AppState = {
@@ -29,18 +30,22 @@ export const initialState: AppState = {
     { id: 4, name: 'Monitor Stand', price: 44.99, inCart: false },
     { id: 5, name: 'Desk Lamp', price: 29.99, inCart: false },
   ],
+  searchQuery: '',
 };
 
 export const CartStore = signalStore(
   { providedIn: 'root' },
   withDevtools('[CART-STORE]'),
   withState(initialState),
-  withComputed(({ cartItems }) => ({
+  withComputed(({ cartItems, searchQuery }) => ({
     cartOnlyItems: computed(() => cartItems().filter((item) => item.inCart)),
     cartTotal: computed(() =>
       cartItems()
         .filter((item) => item.inCart)
         .reduce((sum, item) => sum + item.price, 0),
+    ),
+    filteredItems: computed(() =>
+      cartItems().filter((item) => item.name.toLowerCase().includes(searchQuery().toLowerCase())),
     ),
   })),
   withMethods((store) => ({
@@ -50,6 +55,9 @@ export const CartStore = signalStore(
           item.id === itemId ? { ...item, inCart: !item.inCart } : item,
         ),
       }));
+    },
+    setSearchQuery(query: string) {
+      patchState(store, { searchQuery: query });
     },
   })),
   withHooks({

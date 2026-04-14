@@ -1,0 +1,78 @@
+<h2>What layout feel should the pages have?</h2>
+<p class="subtitle">You're presenting to ~100 people. Which structure helps the audience follow along?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Docs + Live Demo</h3>
+      <p>Code snippet on the left, live interactive demo on the right. Audience sees code and result simultaneously. Like an interactive textbook.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">SignalStore — withState</div>
+        <div class="mockup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px">
+          <div style="background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:12px;font-family:monospace;font-size:11px;line-height:1.6">
+            <span style="color:#cba6f7">withState</span>({<br>
+            &nbsp;&nbsp;cartItems: []<br>
+            })
+          </div>
+          <div style="background:#eff1f5;border-radius:6px;padding:12px">
+            <div style="font-weight:bold;margin-bottom:6px;font-size:11px">Live Output</div>
+            <div style="background:#fff;border-radius:4px;padding:6px;font-size:10px">📦 Wireless Headphones — $59.99</div>
+            <div style="background:#fff;border-radius:4px;padding:6px;font-size:10px;margin-top:4px">📦 Mechanical Keyboard — $89.99</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Story Flow</h3>
+      <p>Full-width sections that build a narrative. Hero concept → code explanation → live demo → key takeaway. Scrolls like a presentation.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">SignalStore — withState</div>
+        <div class="mockup-body" style="font-size:11px;space-y:8px">
+          <div style="background:#e8f4fd;border-radius:6px;padding:10px;margin-bottom:8px;border-left:3px solid #3b82f6">
+            <strong>Define your state shape.</strong> Each property becomes a signal automatically.
+          </div>
+          <div style="background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:10px;font-family:monospace;font-size:10px;margin-bottom:8px">
+            withState({ cartItems: [] })
+          </div>
+          <div style="background:#f0fdf4;border-radius:6px;padding:10px;border-left:3px solid #22c55e;font-size:10px">
+            ✓ Live: All Products — 5 items
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Concept Cards</h3>
+      <p>Each API feature gets a prominent card with a badge, one-liner explanation, minimal code, and a small live demo. Dense but scannable.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">SignalStore</div>
+        <div class="mockup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+          <div style="border:2px solid #7c3aed;border-radius:8px;padding:10px">
+            <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 6px;font-size:10px">withState</span>
+            <div style="font-size:10px;margin-top:6px;color:#555">Define shape → signals</div>
+          </div>
+          <div style="border:2px solid #db2777;border-radius:8px;padding:10px">
+            <span style="background:#db2777;color:#fff;border-radius:4px;padding:2px 6px;font-size:10px">withComputed</span>
+            <div style="font-size:10px;margin-top:6px;color:#555">Derived values</div>
+          </div>
+          <div style="border:2px solid #059669;border-radius:8px;padding:10px">
+            <span style="background:#059669;color:#fff;border-radius:4px;padding:2px 6px;font-size:10px">withMethods</span>
+            <div style="font-size:10px;margin-top:6px;color:#555">State mutations</div>
+          </div>
+          <div style="border:2px solid #0891b2;border-radius:8px;padding:10px">
+            <span style="background:#0891b2;color:#fff;border-radius:4px;padding:2px 6px;font-size:10px">withHooks</span>
+            <div style="font-size:10px;margin-top:6px;color:#555">Lifecycle</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

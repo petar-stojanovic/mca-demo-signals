@@ -11,12 +11,11 @@ import { CartItem, CartStore } from './store/cart.store';
 export class SignalStoreComponent {
   readonly store = inject(CartStore);
 
-  readonly withStateOpen = signal(false);
-  readonly withComputedOpen = signal(false);
-  readonly withMethodsOpen = signal(false);
-  readonly rxMethodOpen = signal(false);
-
   toggleItem(item: CartItem) {
     this.store.toggleInCart(item.id);
+  }
+
+  onSearch(event: Event) {
+    this.store.setSearchQuery((event.target as HTMLInputElement).value);
   }
 }
