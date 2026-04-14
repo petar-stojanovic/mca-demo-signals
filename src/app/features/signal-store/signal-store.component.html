@@ -379,30 +379,24 @@
 &#125;))</code></pre>
       </details>
 
-      @if (store.cartOnlyItems().length === 0) {
-        <div class="alert">
-          <span>Cart is empty. Add items in Section 3 below.</span>
+      <div class="stats shadow w-full">
+        <div class="stat">
+          <div class="stat-title">Items in Cart</div>
+          <div class="stat-value text-secondary">{{ store.cartOnlyItems().length }}</div>
         </div>
-      } @else {
-        <div class="stats shadow w-full">
-          <div class="stat">
-            <div class="stat-title">Items in Cart</div>
-            <div class="stat-value text-secondary">{{ store.cartOnlyItems().length }}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">Total</div>
-            <div class="stat-value text-secondary">{{ store.cartTotal() | currency }}</div>
-          </div>
+        <div class="stat">
+          <div class="stat-title">Total</div>
+          <div class="stat-value text-secondary">{{ store.cartTotal() | currency }}</div>
         </div>
-        <ul class="mt-2 space-y-1">
-          @for (item of store.cartOnlyItems(); track item.id) {
-            <li class="flex justify-between p-2 bg-base-200 rounded">
-              <span>{{ item.name }}</span>
-              <span>{{ item.price | currency }}</span>
-            </li>
-          }
-        </ul>
-      }
+      </div>
+      <ul class="mt-2 space-y-1">
+        @for (item of store.cartOnlyItems(); track item.id) {
+          <li class="flex justify-between p-2 bg-base-200 rounded">
+            <span>{{ item.name }}</span>
+            <span>{{ item.price | currency }}</span>
+          </li>
+        }
+      </ul>
     </div>
   </section>
 
